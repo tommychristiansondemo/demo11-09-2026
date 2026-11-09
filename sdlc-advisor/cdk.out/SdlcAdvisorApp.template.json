@@ -1,0 +1,3964 @@
+{
+ "Description": "Secure SDLC Advisor - application (us-west-2)",
+ "Resources": {
+  "DataKey17AFBB84": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "Secure SDLC Advisor data, logs and audit trail",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::154833006816:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:Encrypt*",
+        "kms:Decrypt*",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:Describe*"
+       ],
+       "Condition": {
+        "ArnLike": {
+         "kms:EncryptionContext:aws:logs:arn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:logs:",
+            {
+             "Ref": "AWS::Region"
+            },
+            ":",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":log-group:*"
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": {
+         "Fn::Join": [
+          "",
+          [
+           "logs.",
+           {
+            "Ref": "AWS::Region"
+           },
+           ".amazonaws.com"
+          ]
+         ]
+        }
+       },
+       "Resource": "*",
+       "Sid": "AllowCloudWatchLogs"
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudwatch.amazonaws.com"
+       },
+       "Resource": "*",
+       "Sid": "AllowCloudWatchAlarmsToSns"
+      },
+      {
+       "Action": [
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+       ],
+       "Condition": {
+        "StringEquals": {
+         "aws:SourceArn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:cloudtrail:",
+            {
+             "Ref": "AWS::Region"
+            },
+            ":",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":trail/sdlc-advisor-trail"
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+       },
+       "Resource": "*",
+       "Sid": "AllowCloudTrailBucketEncryption"
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Condition": {
+        "StringEquals": {
+         "kms:ViaService": "secretsmanager.us-west-2.amazonaws.com"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::154833006816:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:CreateGrant",
+        "kms:DescribeKey"
+       ],
+       "Condition": {
+        "StringEquals": {
+         "kms:ViaService": "secretsmanager.us-west-2.amazonaws.com"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::154833006816:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PendingWindowInDays": 7,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/DataKey/Resource"
+   }
+  },
+  "DataKeyAliasF989EB84": {
+   "Type": "AWS::KMS::Alias",
+   "Properties": {
+    "AliasName": "alias/sdlc-advisor",
+    "TargetKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/DataKey/Alias/Resource"
+   }
+  },
+  "AssessmentsF491DDCD": {
+   "Type": "AWS::DynamoDB::GlobalTable",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "assessmentId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "assessmentId",
+      "KeyType": "RANGE"
+     }
+    ],
+    "Replicas": [
+     {
+      "ReadOnDemandThroughputSettings": {
+       "MaxReadRequestUnits": 200
+      },
+      "Region": "us-west-2",
+      "SSESpecification": {
+       "KMSMasterKeyId": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      "Tags": [
+       {
+        "Key": "project",
+        "Value": "secure-sdlc-advisor"
+       }
+      ]
+     }
+    ],
+    "SSESpecification": {
+     "SSEEnabled": true,
+     "SSEType": "KMS"
+    },
+    "TableName": "sdlc-advisor-assessments",
+    "TimeToLiveSpecification": {
+     "AttributeName": "expiresAt",
+     "Enabled": true
+    },
+    "WriteOnDemandThroughputSettings": {
+     "MaxWriteRequestUnits": 100
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Assessments/Resource"
+   }
+  },
+  "AccessLogs8B620ECA": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "AccessControl": "LogDeliveryWrite",
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "ExpirationInDays": 30,
+       "Status": "Enabled"
+      }
+     ]
+    },
+    "OwnershipControls": {
+     "Rules": [
+      {
+       "ObjectOwnership": "BucketOwnerPreferred"
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/AccessLogs/Resource"
+   }
+  },
+  "AccessLogsPolicyABDC4D2D": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "AccessLogs8B620ECA"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "AccessLogs8B620ECA",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "AccessLogs8B620ECA",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutBucketPolicy",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "AccessLogs8B620ECA",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "AccessLogs8B620ECA",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/AccessLogs/Policy/Resource"
+   }
+  },
+  "AccessLogsAutoDeleteObjectsCustomResourceA1409250": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "AccessLogs8B620ECA"
+    }
+   },
+   "DependsOn": [
+    "AccessLogsPolicyABDC4D2D"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/AccessLogs/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "AccessLogs8B620ECA"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "SiteE53D7754": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "LoggingConfiguration": {
+     "DestinationBucketName": {
+      "Ref": "AccessLogs8B620ECA"
+     },
+     "LogFilePrefix": "s3-site/"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "aws-cdk:cr-owned:ed213914",
+      "Value": "true"
+     },
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Site/Resource"
+   }
+  },
+  "SitePolicyC4000D7D": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "SiteE53D7754"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteE53D7754",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteE53D7754",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutBucketPolicy",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteE53D7754",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteE53D7754",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:GetObject",
+       "Condition": {
+        "StringEquals": {
+         "AWS:SourceArn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:",
+            {
+             "Ref": "AWS::Partition"
+            },
+            ":cloudfront::",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":distribution/",
+            {
+             "Ref": "Cdn9963B1AD"
+            }
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudfront.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "SiteE53D7754",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Site/Policy/Resource"
+   }
+  },
+  "SiteAutoDeleteObjectsCustomResourceBFAA9B42": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "SiteE53D7754"
+    }
+   },
+   "DependsOn": [
+    "SitePolicyC4000D7D"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Site/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "TrailBucketA831CE63": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "KMSMasterKeyID": {
+         "Fn::GetAtt": [
+          "DataKey17AFBB84",
+          "Arn"
+         ]
+        },
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "ExpirationInDays": 90,
+       "Status": "Enabled"
+      }
+     ]
+    },
+    "LoggingConfiguration": {
+     "DestinationBucketName": {
+      "Ref": "AccessLogs8B620ECA"
+     },
+     "LogFilePrefix": "s3-trail/"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/TrailBucket/Resource"
+   }
+  },
+  "TrailBucketPolicyFEBC3C5C": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "TrailBucketA831CE63"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "TrailBucketA831CE63",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "TrailBucketA831CE63",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutBucketPolicy",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "TrailBucketA831CE63",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "TrailBucketA831CE63",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:GetBucketAcl",
+       "Condition": {
+        "StringEquals": {
+         "aws:SourceArn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:cloudtrail:",
+            {
+             "Ref": "AWS::Region"
+            },
+            ":",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":trail/sdlc-advisor-trail"
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::GetAtt": [
+         "TrailBucketA831CE63",
+         "Arn"
+        ]
+       },
+       "Sid": "CloudTrailAclCheck"
+      },
+      {
+       "Action": "s3:PutObject",
+       "Condition": {
+        "StringEquals": {
+         "s3:x-amz-acl": "bucket-owner-full-control",
+         "aws:SourceArn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:cloudtrail:",
+            {
+             "Ref": "AWS::Region"
+            },
+            ":",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":trail/sdlc-advisor-trail"
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "TrailBucketA831CE63",
+            "Arn"
+           ]
+          },
+          "/AWSLogs/",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          "/*"
+         ]
+        ]
+       },
+       "Sid": "CloudTrailWrite"
+      },
+      {
+       "Action": "s3:GetBucketAcl",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::GetAtt": [
+         "TrailBucketA831CE63",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "s3:PutObject",
+       "Condition": {
+        "StringEquals": {
+         "s3:x-amz-acl": "bucket-owner-full-control"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "TrailBucketA831CE63",
+            "Arn"
+           ]
+          },
+          "/AWSLogs/154833006816/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/TrailBucket/Policy/Resource"
+   }
+  },
+  "TrailBucketAutoDeleteObjectsCustomResource8D1A7617": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "TrailBucketA831CE63"
+    }
+   },
+   "DependsOn": [
+    "TrailBucketPolicyFEBC3C5C"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/TrailBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "Trail022F0CF2": {
+   "Type": "AWS::CloudTrail::Trail",
+   "Properties": {
+    "EnableLogFileValidation": true,
+    "EventSelectors": [],
+    "IncludeGlobalServiceEvents": true,
+    "IsLogging": true,
+    "IsMultiRegionTrail": true,
+    "KMSKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "S3BucketName": {
+     "Ref": "TrailBucketA831CE63"
+    },
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "TrailName": "sdlc-advisor-trail"
+   },
+   "DependsOn": [
+    "TrailBucketPolicyFEBC3C5C"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Trail/Resource"
+   }
+  },
+  "OriginVerifyED6A82E8": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "Shared header value proving API requests came through CloudFront (and therefore WAF).",
+    "GenerateSecretString": {
+     "ExcludePunctuation": true,
+     "PasswordLength": 40
+    },
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "Name": "sdlc-advisor/origin-verify",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/OriginVerify/Resource"
+   }
+  },
+  "Guardrail": {
+   "Type": "AWS::Bedrock::Guardrail",
+   "Properties": {
+    "BlockedInputMessaging": "This request was blocked by the content safety guardrail.",
+    "BlockedOutputsMessaging": "The response was blocked by the content safety guardrail.",
+    "ContentPolicyConfig": {
+     "FiltersConfig": [
+      {
+       "InputStrength": "HIGH",
+       "OutputStrength": "NONE",
+       "Type": "PROMPT_ATTACK"
+      },
+      {
+       "InputStrength": "MEDIUM",
+       "OutputStrength": "MEDIUM",
+       "Type": "HATE"
+      },
+      {
+       "InputStrength": "MEDIUM",
+       "OutputStrength": "MEDIUM",
+       "Type": "INSULTS"
+      },
+      {
+       "InputStrength": "HIGH",
+       "OutputStrength": "HIGH",
+       "Type": "SEXUAL"
+      },
+      {
+       "InputStrength": "MEDIUM",
+       "OutputStrength": "LOW",
+       "Type": "VIOLENCE"
+      },
+      {
+       "InputStrength": "LOW",
+       "OutputStrength": "NONE",
+       "Type": "MISCONDUCT"
+      }
+     ]
+    },
+    "Description": "Prompt-attack, harmful-content and secret/PII filters for Secure SDLC Advisor",
+    "Name": "sdlc-advisor-guardrail",
+    "SensitiveInformationPolicyConfig": {
+     "PiiEntitiesConfig": [
+      {
+       "Action": "ANONYMIZE",
+       "Type": "EMAIL"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "PHONE"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "US_SOCIAL_SECURITY_NUMBER"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "CREDIT_DEBIT_CARD_NUMBER"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "AWS_ACCESS_KEY"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "AWS_SECRET_KEY"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "PASSWORD"
+      }
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Guardrail"
+   }
+  },
+  "GuardrailVersion": {
+   "Type": "AWS::Bedrock::GuardrailVersion",
+   "Properties": {
+    "Description": "Pinned version used by the worker",
+    "GuardrailIdentifier": {
+     "Fn::GetAtt": [
+      "Guardrail",
+      "GuardrailId"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/GuardrailVersion"
+   }
+  },
+  "WorkerLogsC1193B08": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/sdlc-advisor/worker",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/WorkerLogs/Resource"
+   }
+  },
+  "WorkerFnServiceRole66434362": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/WorkerFn/ServiceRole/Resource"
+   }
+  },
+  "WorkerFnServiceRoleDefaultPolicy81568881": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "AssessmentsF491DDCD",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "bedrock:InvokeModel",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:bedrock:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":inference-profile/us.anthropic.claude-sonnet-4-6"
+          ]
+         ]
+        },
+        "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-6",
+        "arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-sonnet-4-6",
+        "arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-sonnet-4-6"
+       ],
+       "Sid": "InvokeSelectedModelOnly"
+      },
+      {
+       "Action": "bedrock:ApplyGuardrail",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "Guardrail",
+         "GuardrailArn"
+        ]
+       },
+       "Sid": "ApplyGuardrail"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "WorkerFnServiceRoleDefaultPolicy81568881",
+    "Roles": [
+     {
+      "Ref": "WorkerFnServiceRole66434362"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/WorkerFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "WorkerFn847949AF": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "S3Key": "dd21a78fcf49dad8c0fde41fc3e545673cc5eb9e918649ec0afd6dcd152ebcc0.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Ref": "AssessmentsF491DDCD"
+      },
+      "MODEL_ID": "us.anthropic.claude-sonnet-4-6",
+      "GUARDRAIL_ID": {
+       "Fn::GetAtt": [
+        "Guardrail",
+        "GuardrailId"
+       ]
+      },
+      "GUARDRAIL_VERSION": {
+       "Fn::GetAtt": [
+        "GuardrailVersion",
+        "Version"
+       ]
+      },
+      "MAX_OUTPUT_TOKENS": "10000",
+      "THINKING_BUDGET_TOKENS": "2048",
+      "SERVICE_NAME": "sdlc-advisor-worker"
+     }
+    },
+    "FunctionName": "sdlc-advisor-worker",
+    "Handler": "index.handler",
+    "KmsKeyArn": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LoggingConfig": {
+     "LogGroup": {
+      "Ref": "WorkerLogsC1193B08"
+     }
+    },
+    "MemorySize": 512,
+    "ReservedConcurrentExecutions": 25,
+    "Role": {
+     "Fn::GetAtt": [
+      "WorkerFnServiceRole66434362",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Timeout": 300,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "WorkerFnServiceRoleDefaultPolicy81568881",
+    "WorkerFnServiceRole66434362"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/WorkerFn/Resource",
+    "aws:asset:path": "asset.dd21a78fcf49dad8c0fde41fc3e545673cc5eb9e918649ec0afd6dcd152ebcc0",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "WorkerAsyncConfig6C8156C2": {
+   "Type": "AWS::Lambda::EventInvokeConfig",
+   "Properties": {
+    "FunctionName": {
+     "Ref": "WorkerFn847949AF"
+    },
+    "MaximumEventAgeInSeconds": 600,
+    "MaximumRetryAttempts": 0,
+    "Qualifier": "$LATEST"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/WorkerAsyncConfig/Resource"
+   }
+  },
+  "ApiLogs3D05D88B": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/sdlc-advisor/api",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ApiLogs/Resource"
+   }
+  },
+  "ApiFnServiceRoleD18AAE0E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ApiFn/ServiceRole/Resource"
+   }
+  },
+  "ApiFnServiceRoleDefaultPolicy56A1E6E5": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:DeleteItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "AssessmentsF491DDCD",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "WorkerFn847949AF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "WorkerFn847949AF",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApiFnServiceRoleDefaultPolicy56A1E6E5",
+    "Roles": [
+     {
+      "Ref": "ApiFnServiceRoleD18AAE0E"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ApiFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApiFnE0725F78": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "S3Key": "1e371810d4236f65014c3904dca093c4ec9cd5cafa6fc93a09d9d955cecedd75.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Ref": "AssessmentsF491DDCD"
+      },
+      "WORKER_FUNCTION_NAME": {
+       "Ref": "WorkerFn847949AF"
+      },
+      "HISTORY_TTL_DAYS": "7",
+      "ORIGIN_VERIFY": {
+       "Fn::Join": [
+        "",
+        [
+         "{{resolve:secretsmanager:",
+         {
+          "Ref": "OriginVerifyED6A82E8"
+         },
+         ":SecretString:::}}"
+        ]
+       ]
+      },
+      "APP_VERSION": "1.0.0",
+      "SERVICE_NAME": "sdlc-advisor-api"
+     }
+    },
+    "FunctionName": "sdlc-advisor-api",
+    "Handler": "index.handler",
+    "KmsKeyArn": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LoggingConfig": {
+     "LogGroup": {
+      "Ref": "ApiLogs3D05D88B"
+     }
+    },
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "ApiFnServiceRoleD18AAE0E",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Timeout": 10,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "ApiFnServiceRoleDefaultPolicy56A1E6E5",
+    "ApiFnServiceRoleD18AAE0E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ApiFn/Resource",
+    "aws:asset:path": "asset.1e371810d4236f65014c3904dca093c4ec9cd5cafa6fc93a09d9d955cecedd75",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "PreSignUpLogsA7242E9C": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/sdlc-advisor/presignup",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/PreSignUpLogs/Resource"
+   }
+  },
+  "PreSignUpFnServiceRoleC270C061": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/PreSignUpFn/ServiceRole/Resource"
+   }
+  },
+  "PreSignUpFnServiceRoleDefaultPolicy21B404FA": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PreSignUpFnServiceRoleDefaultPolicy21B404FA",
+    "Roles": [
+     {
+      "Ref": "PreSignUpFnServiceRoleC270C061"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/PreSignUpFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "PreSignUpFn7227C88E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "S3Key": "cb71a9b1b39cdc691441811cde1b0ee9758fcc3f52061a246aeabaf9d9a1cea5.zip"
+    },
+    "FunctionName": "sdlc-advisor-presignup",
+    "Handler": "index.handler",
+    "KmsKeyArn": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LoggingConfig": {
+     "LogGroup": {
+      "Ref": "PreSignUpLogsA7242E9C"
+     }
+    },
+    "MemorySize": 128,
+    "Role": {
+     "Fn::GetAtt": [
+      "PreSignUpFnServiceRoleC270C061",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Timeout": 5,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "PreSignUpFnServiceRoleDefaultPolicy21B404FA",
+    "PreSignUpFnServiceRoleC270C061"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/PreSignUpFn/Resource",
+    "aws:asset:path": "asset.cb71a9b1b39cdc691441811cde1b0ee9758fcc3f52061a246aeabaf9d9a1cea5",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "UserPoolPreSignUpCognito3AFF8F1F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PreSignUpFn7227C88E",
+      "Arn"
+     ]
+    },
+    "Principal": "cognito-idp.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "UserPool6BA7E5F2",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/UserPool/PreSignUpCognito"
+   }
+  },
+  "UserPool6BA7E5F2": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "admin_only",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [],
+    "DeletionProtection": "INACTIVE",
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "LambdaConfig": {
+     "PreSignUp": {
+      "Fn::GetAtt": [
+       "PreSignUpFn7227C88E",
+       "Arn"
+      ]
+     }
+    },
+    "MfaConfiguration": "OFF",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 6,
+      "RequireLowercase": false,
+      "RequireNumbers": false,
+      "RequireSymbols": false,
+      "RequireUppercase": false,
+      "TemporaryPasswordValidityDays": 1
+     }
+    },
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "sdlc-advisor-users",
+    "UserPoolTags": {
+     "project": "secure-sdlc-advisor"
+    },
+    "UsernameConfiguration": {
+     "CaseSensitive": false
+    },
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/UserPool/Resource"
+   }
+  },
+  "UserPoolWebClient4C9370B0": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AccessTokenValidity": 60,
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ClientName": "sdlc-advisor-web",
+    "EnableTokenRevocation": true,
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "GenerateSecret": false,
+    "IdTokenValidity": 60,
+    "PreventUserExistenceErrors": "ENABLED",
+    "RefreshTokenValidity": 1440,
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "TokenValidityUnits": {
+     "AccessToken": "minutes",
+     "IdToken": "minutes",
+     "RefreshToken": "minutes"
+    },
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/UserPool/WebClient/Resource"
+   }
+  },
+  "ApiAccessLogsE9DF007D": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/sdlc-advisor/apiaccess",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ApiAccessLogs/Resource"
+   }
+  },
+  "ApiF70053CD": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "Secure SDLC Advisor API (reached via CloudFront only)",
+    "EndpointConfiguration": {
+     "Types": [
+      "REGIONAL"
+     ]
+    },
+    "Name": "sdlc-advisor-api",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Resource"
+   }
+  },
+  "ApiCloudWatchRole73EC6FC4": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/CloudWatchRole/Resource"
+   }
+  },
+  "ApiAccountA18C9B29": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "ApiCloudWatchRole73EC6FC4",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "ApiF70053CD"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Account"
+   }
+  },
+  "ApiDeploymentB17BE62Df901268de7513924d76510bc51c940b5": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Secure SDLC Advisor API (reached via CloudFront only)",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "DependsOn": [
+    "ApiapiassessmentsidDELETEA0FEA86A",
+    "ApiapiassessmentsidGET6F4EB704",
+    "ApiapiassessmentsidBE0D93F6",
+    "ApiapiassessmentsGETB101870F",
+    "ApiapiassessmentsPOST2D800375",
+    "ApiapiassessmentsED58B2BC",
+    "ApiapihealthGET290CBEED",
+    "Apiapihealth94500BD4",
+    "Apiapi0E601135",
+    "ApiDefault4xx3D30C544",
+    "ApiDefault5xx350DA352"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
+   }
+  },
+  "ApiDeploymentStageprod3EB9684E": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "AccessLogSetting": {
+     "DestinationArn": {
+      "Fn::GetAtt": [
+       "ApiAccessLogsE9DF007D",
+       "Arn"
+      ]
+     },
+     "Format": "{\"requestId\":\"$context.requestId\",\"ip\":\"$context.identity.sourceIp\",\"method\":\"$context.httpMethod\",\"path\":\"$context.resourcePath\",\"status\":\"$context.status\",\"latencyMs\":\"$context.responseLatency\",\"integrationLatencyMs\":\"$context.integrationLatency\",\"bytes\":\"$context.responseLength\",\"user\":\"$context.authorizer.claims.sub\",\"wafError\":\"$context.waf.error\"}"
+    },
+    "DeploymentId": {
+     "Ref": "ApiDeploymentB17BE62Df901268de7513924d76510bc51c940b5"
+    },
+    "MethodSettings": [
+     {
+      "DataTraceEnabled": false,
+      "HttpMethod": "*",
+      "LoggingLevel": "ERROR",
+      "MetricsEnabled": true,
+      "ResourcePath": "/*",
+      "ThrottlingBurstLimit": 50,
+      "ThrottlingRateLimit": 25
+     },
+     {
+      "DataTraceEnabled": false,
+      "HttpMethod": "POST",
+      "ResourcePath": "/~1api~1assessments",
+      "ThrottlingBurstLimit": 10,
+      "ThrottlingRateLimit": 5
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    },
+    "StageName": "prod",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "TracingEnabled": true
+   },
+   "DependsOn": [
+    "ApiAccountA18C9B29"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/DeploymentStage.prod/Resource"
+   }
+  },
+  "Apiapi0E601135": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "api",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/Resource"
+   }
+  },
+  "Apiapihealth94500BD4": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "health",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/health/Resource"
+   }
+  },
+  "ApiapihealthGETApiPermissionSdlcAdvisorAppApiC794DD78GETapihealthF77A7F19": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/health"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/health/GET/ApiPermission.SdlcAdvisorAppApiC794DD78.GET..api.health"
+   }
+  },
+  "ApiapihealthGETApiPermissionTestSdlcAdvisorAppApiC794DD78GETapihealth9346CB75": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/health"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/health/GET/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.GET..api.health"
+   }
+  },
+  "ApiapihealthGET290CBEED": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapihealth94500BD4"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/health/GET/Resource"
+   }
+  },
+  "ApiapiassessmentsED58B2BC": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "assessments",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/Resource"
+   }
+  },
+  "ApiapiassessmentsGETApiPermissionSdlcAdvisorAppApiC794DD78GETapiassessmentsED1E85D6": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/assessments"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/GET/ApiPermission.SdlcAdvisorAppApiC794DD78.GET..api.assessments"
+   }
+  },
+  "ApiapiassessmentsGETApiPermissionTestSdlcAdvisorAppApiC794DD78GETapiassessmentsD62F5A57": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/assessments"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/GET/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.GET..api.assessments"
+   }
+  },
+  "ApiapiassessmentsGETB101870F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiapiassessmentsED58B2BC"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/GET/Resource"
+   }
+  },
+  "ApiapiassessmentsPOSTApiPermissionSdlcAdvisorAppApiC794DD78POSTapiassessments70AD7CBD": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/POST/api/assessments"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/POST/ApiPermission.SdlcAdvisorAppApiC794DD78.POST..api.assessments"
+   }
+  },
+  "ApiapiassessmentsPOSTApiPermissionTestSdlcAdvisorAppApiC794DD78POSTapiassessments5DDF2D6C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/POST/api/assessments"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/POST/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.POST..api.assessments"
+   }
+  },
+  "ApiapiassessmentsPOST2D800375": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiapiassessmentsED58B2BC"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/POST/Resource"
+   }
+  },
+  "ApiapiassessmentsidBE0D93F6": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "ApiapiassessmentsED58B2BC"
+    },
+    "PathPart": "{id}",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/{id}/Resource"
+   }
+  },
+  "ApiapiassessmentsidGETApiPermissionSdlcAdvisorAppApiC794DD78GETapiassessmentsidB6C324DB": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/assessments/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/{id}/GET/ApiPermission.SdlcAdvisorAppApiC794DD78.GET..api.assessments.{id}"
+   }
+  },
+  "ApiapiassessmentsidGETApiPermissionTestSdlcAdvisorAppApiC794DD78GETapiassessmentsidDB69EDD5": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/assessments/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/{id}/GET/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.GET..api.assessments.{id}"
+   }
+  },
+  "ApiapiassessmentsidGET6F4EB704": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiapiassessmentsidBE0D93F6"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/{id}/GET/Resource"
+   }
+  },
+  "ApiapiassessmentsidDELETEApiPermissionSdlcAdvisorAppApiC794DD78DELETEapiassessmentsid04EF86F3": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/DELETE/api/assessments/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/{id}/DELETE/ApiPermission.SdlcAdvisorAppApiC794DD78.DELETE..api.assessments.{id}"
+   }
+  },
+  "ApiapiassessmentsidDELETEApiPermissionTestSdlcAdvisorAppApiC794DD78DELETEapiassessmentsidCFAF6ACC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/DELETE/api/assessments/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/{id}/DELETE/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.DELETE..api.assessments.{id}"
+   }
+  },
+  "ApiapiassessmentsidDELETEA0FEA86A": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "DELETE",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiapiassessmentsidBE0D93F6"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default/api/assessments/{id}/DELETE/Resource"
+   }
+  },
+  "ApiDefault4xx3D30C544": {
+   "Type": "AWS::ApiGateway::GatewayResponse",
+   "Properties": {
+    "ResponseParameters": {
+     "gatewayresponse.header.Cache-Control": "'no-store'"
+    },
+    "ResponseTemplates": {
+     "application/json": "{\"error\":{\"code\":\"$context.error.responseType\",\"message\":$context.error.messageString,\"correlationId\":\"$context.requestId\"}}"
+    },
+    "ResponseType": "DEFAULT_4XX",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default4xx/Resource"
+   }
+  },
+  "ApiDefault5xx350DA352": {
+   "Type": "AWS::ApiGateway::GatewayResponse",
+   "Properties": {
+    "ResponseParameters": {
+     "gatewayresponse.header.Cache-Control": "'no-store'"
+    },
+    "ResponseTemplates": {
+     "application/json": "{\"error\":{\"code\":\"$context.error.responseType\",\"message\":$context.error.messageString,\"correlationId\":\"$context.requestId\"}}"
+    },
+    "ResponseType": "DEFAULT_5XX",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api/Default5xx/Resource"
+   }
+  },
+  "AuthorizerBD825682": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "AuthorizerResultTtlInSeconds": 300,
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "sdlc-advisor-cognito",
+    "ProviderARNs": [
+     {
+      "Fn::GetAtt": [
+       "UserPool6BA7E5F2",
+       "Arn"
+      ]
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Authorizer/Resource"
+   }
+  },
+  "SecurityHeadersE66B69D3": {
+   "Type": "AWS::CloudFront::ResponseHeadersPolicy",
+   "Properties": {
+    "ResponseHeadersPolicyConfig": {
+     "CustomHeadersConfig": {
+      "Items": [
+       {
+        "Header": "Permissions-Policy",
+        "Override": true,
+        "Value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+       },
+       {
+        "Header": "Cross-Origin-Opener-Policy",
+        "Override": true,
+        "Value": "same-origin"
+       },
+       {
+        "Header": "Cross-Origin-Resource-Policy",
+        "Override": true,
+        "Value": "same-origin"
+       }
+      ]
+     },
+     "Name": "sdlc-advisor-security-headers",
+     "RemoveHeadersConfig": {
+      "Items": [
+       {
+        "Header": "Server"
+       }
+      ]
+     },
+     "SecurityHeadersConfig": {
+      "ContentSecurityPolicy": {
+       "ContentSecurityPolicy": {
+        "Fn::Join": [
+         "",
+         [
+          "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cognito-idp.",
+          {
+           "Ref": "AWS::Region"
+          },
+          ".amazonaws.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+         ]
+        ]
+       },
+       "Override": true
+      },
+      "ContentTypeOptions": {
+       "Override": true
+      },
+      "FrameOptions": {
+       "FrameOption": "DENY",
+       "Override": true
+      },
+      "ReferrerPolicy": {
+       "Override": true,
+       "ReferrerPolicy": "strict-origin-when-cross-origin"
+      },
+      "StrictTransportSecurity": {
+       "AccessControlMaxAgeSec": 31536000,
+       "IncludeSubdomains": false,
+       "Override": true,
+       "Preload": false
+      },
+      "XSSProtection": {
+       "Override": true,
+       "Protection": false
+      }
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/SecurityHeaders/Resource"
+   }
+  },
+  "CdnOrigin1S3OriginAccessControl6AC0AEFC": {
+   "Type": "AWS::CloudFront::OriginAccessControl",
+   "Properties": {
+    "OriginAccessControlConfig": {
+     "Name": "SdlcAdvisorAppCdnOrigin1S3OriginAccessControlA3A62D45",
+     "OriginAccessControlOriginType": "s3",
+     "SigningBehavior": "always",
+     "SigningProtocol": "sigv4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Cdn/Origin1/S3OriginAccessControl/Resource"
+   }
+  },
+  "Cdn9963B1AD": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Aliases": [
+      "demo.awsteach.com"
+     ],
+     "CacheBehaviors": [
+      {
+       "AllowedMethods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT",
+        "PATCH",
+        "POST",
+        "DELETE"
+       ],
+       "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+       "Compress": true,
+       "OriginRequestPolicyId": "b689b0a8-53d0-40ab-baf2-68738e2966ac",
+       "PathPattern": "/api/*",
+       "ResponseHeadersPolicyId": {
+        "Ref": "SecurityHeadersE66B69D3"
+       },
+       "TargetOriginId": "SdlcAdvisorAppCdnOrigin226D22533",
+       "ViewerProtocolPolicy": "https-only"
+      }
+     ],
+     "Comment": "Secure SDLC Advisor",
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "ResponseHeadersPolicyId": {
+       "Ref": "SecurityHeadersE66B69D3"
+      },
+      "TargetOriginId": "SdlcAdvisorAppCdnOrigin1042F8F53",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2and3",
+     "IPV6Enabled": true,
+     "Logging": {
+      "Bucket": {
+       "Fn::GetAtt": [
+        "AccessLogs8B620ECA",
+        "RegionalDomainName"
+       ]
+      },
+      "Prefix": "cloudfront/"
+     },
+     "Origins": [
+      {
+       "DomainName": {
+        "Fn::GetAtt": [
+         "SiteE53D7754",
+         "RegionalDomainName"
+        ]
+       },
+       "Id": "SdlcAdvisorAppCdnOrigin1042F8F53",
+       "OriginAccessControlId": {
+        "Fn::GetAtt": [
+         "CdnOrigin1S3OriginAccessControl6AC0AEFC",
+         "Id"
+        ]
+       },
+       "S3OriginConfig": {
+        "OriginAccessIdentity": ""
+       }
+      },
+      {
+       "CustomOriginConfig": {
+        "OriginProtocolPolicy": "https-only",
+        "OriginReadTimeout": 30,
+        "OriginSSLProtocols": [
+         "TLSv1.2"
+        ]
+       },
+       "DomainName": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "ApiF70053CD"
+          },
+          ".execute-api.",
+          {
+           "Ref": "AWS::Region"
+          },
+          ".amazonaws.com"
+         ]
+        ]
+       },
+       "Id": "SdlcAdvisorAppCdnOrigin226D22533",
+       "OriginCustomHeaders": [
+        {
+         "HeaderName": "x-origin-verify",
+         "HeaderValue": {
+          "Fn::Join": [
+           "",
+           [
+            "{{resolve:secretsmanager:",
+            {
+             "Ref": "OriginVerifyED6A82E8"
+            },
+            ":SecretString:::}}"
+           ]
+          ]
+         }
+        }
+       ],
+       "OriginPath": {
+        "Fn::Join": [
+         "",
+         [
+          "/",
+          {
+           "Ref": "ApiDeploymentStageprod3EB9684E"
+          }
+         ]
+        ]
+       }
+      }
+     ],
+     "PriceClass": "PriceClass_100",
+     "ViewerCertificate": {
+      "AcmCertificateArn": {
+       "Fn::GetAtt": [
+        "ExportsReader8B249524",
+        "/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1RefCert5C9FAEC1FEAC1534"
+       ]
+      },
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     },
+     "WebACLId": {
+      "Fn::GetAtt": [
+       "ExportsReader8B249524",
+       "/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1FnGetAttWebAclArn88C45EAC"
+      ]
+     }
+    },
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Cdn/Resource"
+   }
+  },
+  "AliasAEAD92310": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "Cdn9963B1AD",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z02882605B7GUS0L3VHX",
+    "Name": "demo.awsteach.com.",
+    "Type": "A"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/AliasA/Resource"
+   }
+  },
+  "AliasAAAA067338AF": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "Cdn9963B1AD",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z02882605B7GUS0L3VHX",
+    "Name": "demo.awsteach.com.",
+    "Type": "AAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/AliasAAAA/Resource"
+   }
+  },
+  "HealthCheck": {
+   "Type": "AWS::Route53::HealthCheck",
+   "Properties": {
+    "HealthCheckConfig": {
+     "EnableSNI": true,
+     "FailureThreshold": 3,
+     "FullyQualifiedDomainName": "demo.awsteach.com",
+     "Port": 443,
+     "RequestInterval": 30,
+     "ResourcePath": "/api/health",
+     "Type": "HTTPS"
+    },
+    "HealthCheckTags": [
+     {
+      "Key": "Name",
+      "Value": "sdlc-advisor-health"
+     },
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/HealthCheck"
+   }
+  },
+  "DeploySiteAwsCliLayer88B0EBE2": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "Content": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "S3Key": "98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip"
+    },
+    "Description": "/opt/awscli/aws"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/DeploySite/AwsCliLayer/Resource",
+    "aws:asset:path": "asset.98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "DeploySiteCustomResource512MiB5775DB62": {
+   "Type": "Custom::CDKBucketDeployment",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92",
+      "Arn"
+     ]
+    },
+    "SourceBucketNames": [
+     "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "cdk-sdlcadv-assets-154833006816-us-west-2"
+    ],
+    "SourceObjectKeys": [
+     "8ce61bec54902b3a6af68083edf60cca8dae999a88ae7f6dbb4cc7278dd09d91.zip",
+     "3d04759a23b497f77602600b4050e4face69812606d93ba2ffed75f681d0f117.zip"
+    ],
+    "SourceMarkers": [
+     {},
+     {
+      "<<marker:0xbaba:0>>": {
+       "Fn::Join": [
+        "",
+        [
+         "\"",
+         {
+          "Ref": "AWS::Region"
+         },
+         "\""
+        ]
+       ]
+      },
+      "<<marker:0xbaba:1>>": {
+       "Fn::Join": [
+        "",
+        [
+         "\"",
+         {
+          "Ref": "UserPool6BA7E5F2"
+         },
+         "\""
+        ]
+       ]
+      },
+      "<<marker:0xbaba:2>>": {
+       "Fn::Join": [
+        "",
+        [
+         "\"",
+         {
+          "Ref": "UserPoolWebClient4C9370B0"
+         },
+         "\""
+        ]
+       ]
+      }
+     }
+    ],
+    "SourceMarkersConfig": [
+     {},
+     {}
+    ],
+    "DestinationBucketName": {
+     "Ref": "SiteE53D7754"
+    },
+    "WaitForDistributionInvalidation": true,
+    "Prune": true,
+    "DistributionId": {
+     "Ref": "Cdn9963B1AD"
+    },
+    "DistributionPaths": [
+     "/*"
+    ],
+    "OutputObjectKeys": true
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/DeploySite/CustomResource-512MiB/Default"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::cdk-sdlcadv-assets-154833006816-us-west-2"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::cdk-sdlcadv-assets-154833006816-us-west-2/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteE53D7754",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteE53D7754",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudfront:GetInvalidation",
+        "cloudfront:CreateInvalidation"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726",
+    "Roles": [
+     {
+      "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "S3Key": "35328da138f26fbd9160297abc9a2522d93dbf75878cd5114a9c050419fc1ce0.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+     }
+    },
+    "Handler": "index.handler",
+    "Layers": [
+     {
+      "Ref": "DeploySiteAwsCliLayer88B0EBE2"
+     }
+    ],
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.13",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726",
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Resource",
+    "aws:asset:path": "asset.35328da138f26fbd9160297abc9a2522d93dbf75878cd5114a9c050419fc1ce0",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "Alarms04B5A0BF": {
+   "Type": "AWS::SNS::Topic",
+   "Properties": {
+    "KmsMasterKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "TopicName": "sdlc-advisor-alarms"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Alarms/Resource"
+   }
+  },
+  "AlarmsPolicy5C860CFE": {
+   "Type": "AWS::SNS::TopicPolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sns:Publish",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": "*",
+       "Resource": {
+        "Ref": "Alarms04B5A0BF"
+       },
+       "Sid": "AllowPublishThroughSSLOnly"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Topics": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Alarms/Policy/Resource"
+   }
+  },
+  "Api5xxAlarm31F257DC": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-advisor-api-5xx",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "ApiName",
+      "Value": "sdlc-advisor-api"
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "5XXError",
+    "Namespace": "AWS/ApiGateway",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Api5xxAlarm/Resource"
+   }
+  },
+  "ApiLatencyAlarm453002C0": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-advisor-api-latency-p90",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "ApiName",
+      "Value": "sdlc-advisor-api"
+     }
+    ],
+    "EvaluationPeriods": 3,
+    "ExtendedStatistic": "p90",
+    "MetricName": "Latency",
+    "Namespace": "AWS/ApiGateway",
+    "Period": 300,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Threshold": 3000,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ApiLatencyAlarm/Resource"
+   }
+  },
+  "ApiFnErrorsAlarmEDB69D1D": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-advisor-api-fn-errors",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ApiFnE0725F78"
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Threshold": 3,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ApiFnErrorsAlarm/Resource"
+   }
+  },
+  "WorkerErrorsAlarm1932B217": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-advisor-worker-errors",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "WorkerFn847949AF"
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Threshold": 1,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/WorkerErrorsAlarm/Resource"
+   }
+  },
+  "WorkerThrottlesAlarm3D9E14E4": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-advisor-worker-throttles",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "WorkerFn847949AF"
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "Throttles",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Threshold": 1,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/WorkerThrottlesAlarm/Resource"
+   }
+  },
+  "AssessmentFailuresAlarmF55DD034": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-advisor-assessment-failures",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "EvaluationPeriods": 1,
+    "MetricName": "AssessmentsFailed",
+    "Namespace": "SecureSdlcAdvisor",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "Threshold": 3,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/AssessmentFailuresAlarm/Resource"
+   }
+  },
+  "Dashboard9E4231ED": {
+   "Type": "AWS::CloudWatch::Dashboard",
+   "Properties": {
+    "DashboardBody": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"widgets\":[{\"type\":\"text\",\"width\":24,\"height\":2,\"x\":0,\"y\":0,\"properties\":{\"markdown\":\"# Secure SDLC Advisor — operations\\nhttps://demo.awsteach.com · model `us.anthropic.claude-sonnet-4-6` · training demo (synthetic data only)\"}},{\"type\":\"alarm\",\"width\":8,\"height\":6,\"x\":0,\"y\":2,\"properties\":{\"title\":\"Alarms\",\"alarms\":[\"",
+       {
+        "Fn::GetAtt": [
+         "Api5xxAlarm31F257DC",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "ApiLatencyAlarm453002C0",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "ApiFnErrorsAlarmEDB69D1D",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "WorkerErrorsAlarm1932B217",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "WorkerThrottlesAlarm3D9E14E4",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "AssessmentFailuresAlarmF55DD034",
+         "Arn"
+        ]
+       },
+       "\"]}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":8,\"y\":2,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Assessments\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"SecureSdlcAdvisor\",\"AssessmentsRequested\",{\"stat\":\"Sum\"}],[\"SecureSdlcAdvisor\",\"AssessmentsCompleted\",{\"stat\":\"Sum\"}],[\"SecureSdlcAdvisor\",\"AssessmentsFailed\",{\"stat\":\"Sum\"}],[\"SecureSdlcAdvisor\",\"GuardrailBlocks\",{\"stat\":\"Sum\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":16,\"y\":2,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Assessment duration (ms)\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"SecureSdlcAdvisor\",\"AssessmentDurationMs\"],[\"SecureSdlcAdvisor\",\"AssessmentDurationMs\",{\"stat\":\"p90\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":0,\"y\":8,\"properties\":{\"view\":\"timeSeries\",\"title\":\"API requests / errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/ApiGateway\",\"Count\",\"ApiName\",\"sdlc-advisor-api\",{\"stat\":\"SampleCount\"}],[\"AWS/ApiGateway\",\"4XXError\",\"ApiName\",\"sdlc-advisor-api\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}],[\"AWS/ApiGateway\",\"5XXError\",\"ApiName\",\"sdlc-advisor-api\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":8,\"y\":8,\"properties\":{\"view\":\"timeSeries\",\"title\":\"API latency (ms)\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/ApiGateway\",\"Latency\",\"ApiName\",\"sdlc-advisor-api\",{\"stat\":\"p50\"}],[\"AWS/ApiGateway\",\"Latency\",\"ApiName\",\"sdlc-advisor-api\",{\"stat\":\"p90\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":16,\"y\":8,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Bedrock tokens\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"SecureSdlcAdvisor\",\"InputTokens\",{\"stat\":\"Sum\"}],[\"SecureSdlcAdvisor\",\"OutputTokens\",{\"stat\":\"Sum\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":0,\"y\":14,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Lambda errors / throttles\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "ApiFnE0725F78"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Errors\",\"FunctionName\",\"",
+       {
+        "Ref": "WorkerFn847949AF"
+       },
+       "\",{\"stat\":\"Sum\"}],[\"AWS/Lambda\",\"Throttles\",\"FunctionName\",\"",
+       {
+        "Ref": "WorkerFn847949AF"
+       },
+       "\",{\"stat\":\"Sum\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":8,\"y\":14,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Worker concurrency\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/Lambda\",\"ConcurrentExecutions\",\"FunctionName\",\"",
+       {
+        "Ref": "WorkerFn847949AF"
+       },
+       "\",{\"stat\":\"Maximum\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":16,\"y\":14,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Edge: WAF + CloudFront + health check\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/WAFV2\",\"BlockedRequests\",\"Rule\",\"ALL\",\"WebACL\",\"sdlc-advisor-web-acl\",{\"label\":\"WAF blocked\",\"region\":\"us-east-1\",\"stat\":\"Sum\"}],[\"AWS/CloudFront\",\"5xxErrorRate\",\"DistributionId\",\"",
+       {
+        "Ref": "Cdn9963B1AD"
+       },
+       "\",\"Region\",\"Global\",{\"label\":\"CloudFront 5xx %\",\"region\":\"us-east-1\"}],[\"AWS/Route53\",\"HealthCheckStatus\",\"HealthCheckId\",\"",
+       {
+        "Fn::GetAtt": [
+         "HealthCheck",
+         "HealthCheckId"
+        ]
+       },
+       "\",{\"label\":\"Health (1 = healthy)\",\"region\":\"us-east-1\",\"stat\":\"Minimum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}}]}"
+      ]
+     ]
+    },
+    "DashboardName": "sdlc-advisor-operations",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Dashboard/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/8VUwW7bMAz9lvasalmzosBubrK1w9a1SLpehiGgZdZRI4uGKDfLBP/7ICmJU6w7FBiwi/lIiiIfSflUnp6fydERrPlEVasTo0sZ5h7USsCaF2HVsAyfcSMmDzaKwmjgqCTQi2pjoaGqlOEOSoP3p9F3aagEkwy94LEMF51aoY+ujL6H40b/1Pb4/fFh4piRxzK5WOajRedpigY93pSPqDwf9+I/Rv8Q2XVLRqvNwCjrr+CVA+YePDZoX1nYPw7ekboAxl4oQ13lHWgjw10UkWUCvWBUDj03YKFGJ8M86fFARr0osXKkVjLEPejAVbsb9so9OtZke2GoZhm+UH3pqGvjmR3uhYGmrGBhqcJHll+T+NhZ5TVZoaGRYUYGY0ySwzgyimu3CMCMnmURhaiwNbSJjLd9mO4Nu3Sp6H2WD09o/Sf7RCuckH3Qdbz+ReMtukZzJJVIwAbdlqSYa1sb9DRcuwO9UFRb7UmGb4zulii1aY93YGI0Wn/oypZeQKtr8LiGjQwzZF+0OjVkgIVS1FkvBqrReqDNPdSpixnMkKlzCuMi7JXtnRlfo19SFU1bdJkrmCG3ZDkd/sOUee7K56LzS3L6F7pU417brt6DI+sToxR+hVCh42HCLzummr3TZZd6PB/fOF3ryB+ZJ2S9y939i/kwuBeOOo9nYxmKGSpyVU4a0Ry9KABgsF8hGL+cLFGtesGWZbijVqv0ZBJI36H4A3VLdw1eLWUoDLgm/1gjmAIvS4KcZK/0vZh07Kl5cTbPXbeOnnSFLs0yPYE4Y23Txt50vu38sxFfQ9tG7/blmbjFC1izMloWa54YnRa7F/FNykd+83T6Tr49l6OjR9b6xHXW6wblLEsxkiM5OmoT03swuoLY3HjTnExqNP8Gc52NcnwGAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/CDKMetadata/Default"
+   }
+  },
+  "ExportsReader8B249524": {
+   "Type": "Custom::CrossRegionExportReader",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCrossRegionExportReaderCustomResourceProviderHandler46647B68",
+      "Arn"
+     ]
+    },
+    "ReaderProps": {
+     "region": "us-west-2",
+     "prefix": "SdlcAdvisorApp",
+     "imports": {
+      "/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1RefCert5C9FAEC1FEAC1534": "{{resolve:ssm:/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1RefCert5C9FAEC1FEAC1534}}",
+      "/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1FnGetAttWebAclArn88C45EAC": "{{resolve:ssm:/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1FnGetAttWebAclArn88C45EAC}}"
+     }
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/ExportsReader/Resource/Default"
+   }
+  },
+  "CustomCrossRegionExportReaderCustomResourceProviderRole10531BBD": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:",
+            {
+             "Ref": "AWS::Partition"
+            },
+            ":ssm:us-west-2:154833006816:parameter/cdk/exports/SdlcAdvisorApp/*"
+           ]
+          ]
+         },
+         "Action": [
+          "ssm:AddTagsToResource",
+          "ssm:RemoveTagsFromResource",
+          "ssm:GetParameters"
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Custom::CrossRegionExportReaderCustomResourceProvider/Role"
+   }
+  },
+  "CustomCrossRegionExportReaderCustomResourceProviderHandler46647B68": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-west-2",
+     "S3Key": "f8b7112ff78fd0b6fab4c6b048fc1da9945198135db9a1e6b1d5cb4599d5a3d2.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCrossRegionExportReaderCustomResourceProviderRole10531BBD",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x"
+   },
+   "DependsOn": [
+    "CustomCrossRegionExportReaderCustomResourceProviderRole10531BBD"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorApp/Custom::CrossRegionExportReaderCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.f8b7112ff78fd0b6fab4c6b048fc1da9945198135db9a1e6b1d5cb4599d5a3d2",
+    "aws:asset:property": "Code"
+   }
+  }
+ },
+ "Outputs": {
+  "ApiEndpoint4F160690": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ApiF70053CD"
+      },
+      ".execute-api.us-west-2.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ApiDeploymentStageprod3EB9684E"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "Url": {
+   "Value": "https://demo.awsteach.com"
+  },
+  "DistributionId": {
+   "Value": {
+    "Ref": "Cdn9963B1AD"
+   }
+  },
+  "DistributionDomain": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Cdn9963B1AD",
+     "DomainName"
+    ]
+   }
+  },
+  "UserPoolId": {
+   "Value": {
+    "Ref": "UserPool6BA7E5F2"
+   }
+  },
+  "UserPoolClientId": {
+   "Value": {
+    "Ref": "UserPoolWebClient4C9370B0"
+   }
+  },
+  "ApiId": {
+   "Value": {
+    "Ref": "ApiF70053CD"
+   }
+  },
+  "TableName": {
+   "Value": {
+    "Ref": "AssessmentsF491DDCD"
+   }
+  },
+  "GuardrailId": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Guardrail",
+     "GuardrailId"
+    ]
+   }
+  },
+  "DashboardName": {
+   "Value": "sdlc-advisor-operations"
+  },
+  "SiteBucket": {
+   "Value": {
+    "Ref": "SiteE53D7754"
+   }
+  }
+ },
+ "Mappings": {
+  "AWSCloudFrontPartitionHostedZoneIdMap": {
+   "aws": {
+    "zoneId": "Z2FDTNDATAQYW2"
+   },
+   "aws-cn": {
+    "zoneId": "Z3RFFRIM2A3IF5"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/sdlcadv/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

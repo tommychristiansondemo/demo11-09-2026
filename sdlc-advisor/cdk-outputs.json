@@ -1,0 +1,19 @@
+{
+  "SdlcAdvisorEdge": {
+    "WebAclArn": "arn:aws:wafv2:us-east-1:154833006816:global/webacl/sdlc-advisor-web-acl/c31b0430-5715-4154-ba14-2761525f0221",
+    "CertificateArn": "arn:aws:acm:us-east-1:154833006816:certificate/91a45fff-068c-44d1-a083-6bf6d8d32161"
+  },
+  "SdlcAdvisorApp": {
+    "ApiEndpoint4F160690": "https://el5dcq9q7k.execute-api.us-west-2.amazonaws.com/prod/",
+    "DistributionDomain": "d3tjsx35xzpem6.cloudfront.net",
+    "GuardrailId": "19do19w632ve",
+    "DashboardName": "sdlc-advisor-operations",
+    "UserPoolClientId": "256nh3ufvikm0jg7lio7bfana5",
+    "TableName": "sdlc-advisor-assessments",
+    "UserPoolId": "us-west-2_gBS6P1vxj",
+    "DistributionId": "E2I70HDRWRL7CD",
+    "ApiId": "el5dcq9q7k",
+    "Url": "https://demo.awsteach.com",
+    "SiteBucket": "sdlcadvisorapp-sitee53d7754-a0hpn33behb6"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "SdlcInsightsEdge": {
+    "WebAclArn": "arn:aws:wafv2:us-east-1:154833006816:global/webacl/sdlc-insights-web-acl/4349612c-2776-46da-a585-3f4ab21ad84e",
+    "CertificateArn": "arn:aws:acm:us-east-1:154833006816:certificate/be1fb11c-cc3d-49ab-99b1-1e6b47b7fe8f"
+  },
+  "SdlcInsightsApp": {
+    "ApiEndpoint4F160690": "https://ptayvbkwak.execute-api.us-west-2.amazonaws.com/prod/",
+    "GuardrailId": "h6tuu6nx03ju",
+    "UserPoolClientId": "3a3bobkv2nsgtbuot8mrd46dp2",
+    "DistributionId": "ENJM6211E8Z6V",
+    "ApiId": "ptayvbkwak",
+    "Url": "https://sdlc-insights.awsteach.com",
+    "KnowledgeBucket": "sdlc-insights-knowledge-154833006816"
+  }
+}

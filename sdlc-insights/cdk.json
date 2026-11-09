@@ -1,0 +1,11 @@
+{
+  "app": "npx ts-node --prefer-ts-exts bin/app.ts",
+  "context": {
+    "@aws-cdk/core:bootstrapQualifier": "sdlcins",
+    "domainName": "sdlc-insights.awsteach.com",
+    "hostedZoneName": "awsteach.com",
+    "modelId": "us.anthropic.claude-sonnet-4-6",
+    "advisorStackName": "SdlcAdvisorApp",
+    "advisorEdgeStackName": "SdlcAdvisorEdge"
+  }
+}

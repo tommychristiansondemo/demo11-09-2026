@@ -1,0 +1,29 @@
+== DNS / TLS / headers
+  PASS  DNS A record resolves
+  PASS  HTTPS certificate valid
+  PASS  HTTP redirects to HTTPS
+  PASS  header strict-transport-security
+  PASS  header content-security-policy
+  PASS  header x-frame-options
+  PASS  header x-content-type-options
+  PASS  insights.awsteach.com untouched (not our distribution)
+  PASS  Advisor page links to Insights
+== API
+  PASS  health = 200
+  PASS  unauthenticated knowledge = 401
+  PASS  direct execute-api bypass = 403
+  PASS  self sign-up + sign-in via shared Advisor pool
+  PASS  knowledge doc served from S3
+  PASS  knowledge doc has live inventory
+  PASS  inventory covers 4 stacks
+  ... inventory: 194 resources, 42 types, 22 services
+  PASS  logs endpoint returns events
+  PASS  log source allow-list enforced
+  PASS  metrics + alarms endpoint
+  PASS  Advisor reasoning logs present with thinking text
+== Chatbot end-to-end
+  PASS  chat answer COMPLETE
+  PASS  chat used live inventory tool
+  PASS  chat mentions Sonnet 4.6
+  PASS  chat returns reasoning
+  ... 14369 ms, 2651 in / 626 out, cache read 33438

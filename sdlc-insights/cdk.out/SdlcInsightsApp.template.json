@@ -1,0 +1,4319 @@
+{
+ "Description": "SDLC Class Insights - chatbot and live deployment insights (us-west-2)",
+ "Resources": {
+  "DataKey17AFBB84": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "Class Insights data and logs",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::154833006816:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:Encrypt*",
+        "kms:Decrypt*",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:Describe*"
+       ],
+       "Condition": {
+        "ArnLike": {
+         "kms:EncryptionContext:aws:logs:arn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:logs:",
+            {
+             "Ref": "AWS::Region"
+            },
+            ":",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":log-group:*"
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": {
+         "Fn::Join": [
+          "",
+          [
+           "logs.",
+           {
+            "Ref": "AWS::Region"
+           },
+           ".amazonaws.com"
+          ]
+         ]
+        }
+       },
+       "Resource": "*",
+       "Sid": "AllowCloudWatchLogs"
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudwatch.amazonaws.com"
+       },
+       "Resource": "*",
+       "Sid": "AllowCloudWatchAlarmsToSns"
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Condition": {
+        "StringEquals": {
+         "kms:ViaService": "secretsmanager.us-west-2.amazonaws.com"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::154833006816:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:CreateGrant",
+        "kms:DescribeKey"
+       ],
+       "Condition": {
+        "StringEquals": {
+         "kms:ViaService": "secretsmanager.us-west-2.amazonaws.com"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::154833006816:root"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PendingWindowInDays": 7,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/DataKey/Resource"
+   }
+  },
+  "DataKeyAliasF989EB84": {
+   "Type": "AWS::KMS::Alias",
+   "Properties": {
+    "AliasName": "alias/sdlc-insights",
+    "TargetKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/DataKey/Alias/Resource"
+   }
+  },
+  "ChatJobs5DE2735F": {
+   "Type": "AWS::DynamoDB::GlobalTable",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "messageId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "messageId",
+      "KeyType": "RANGE"
+     }
+    ],
+    "Replicas": [
+     {
+      "ReadOnDemandThroughputSettings": {
+       "MaxReadRequestUnits": 200
+      },
+      "Region": "us-west-2",
+      "SSESpecification": {
+       "KMSMasterKeyId": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      "Tags": [
+       {
+        "Key": "project",
+        "Value": "sdlc-class-insights"
+       }
+      ]
+     }
+    ],
+    "SSESpecification": {
+     "SSEEnabled": true,
+     "SSEType": "KMS"
+    },
+    "TableName": "sdlc-insights-chat",
+    "TimeToLiveSpecification": {
+     "AttributeName": "expiresAt",
+     "Enabled": true
+    },
+    "WriteOnDemandThroughputSettings": {
+     "MaxWriteRequestUnits": 100
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatJobs/Resource"
+   }
+  },
+  "AccessLogs8B620ECA": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "AccessControl": "LogDeliveryWrite",
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "ExpirationInDays": 30,
+       "Status": "Enabled"
+      }
+     ]
+    },
+    "OwnershipControls": {
+     "Rules": [
+      {
+       "ObjectOwnership": "BucketOwnerPreferred"
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/AccessLogs/Resource"
+   }
+  },
+  "AccessLogsPolicyABDC4D2D": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "AccessLogs8B620ECA"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "AccessLogs8B620ECA",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "AccessLogs8B620ECA",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutBucketPolicy",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "AccessLogs8B620ECA",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "AccessLogs8B620ECA",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/AccessLogs/Policy/Resource"
+   }
+  },
+  "AccessLogsAutoDeleteObjectsCustomResourceA1409250": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "AccessLogs8B620ECA"
+    }
+   },
+   "DependsOn": [
+    "AccessLogsPolicyABDC4D2D"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/AccessLogs/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-sdlcins-assets-154833006816-us-west-2",
+     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "AccessLogs8B620ECA"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "SiteE53D7754": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "LoggingConfiguration": {
+     "DestinationBucketName": {
+      "Ref": "AccessLogs8B620ECA"
+     },
+     "LogFilePrefix": "s3-site/"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "aws-cdk:cr-owned:a5866406",
+      "Value": "true"
+     },
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Site/Resource"
+   }
+  },
+  "SitePolicyC4000D7D": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "SiteE53D7754"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteE53D7754",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteE53D7754",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutBucketPolicy",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteE53D7754",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteE53D7754",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "s3:GetObject",
+       "Condition": {
+        "StringEquals": {
+         "AWS:SourceArn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:",
+            {
+             "Ref": "AWS::Partition"
+            },
+            ":cloudfront::",
+            {
+             "Ref": "AWS::AccountId"
+            },
+            ":distribution/",
+            {
+             "Ref": "Cdn9963B1AD"
+            }
+           ]
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudfront.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "SiteE53D7754",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Site/Policy/Resource"
+   }
+  },
+  "SiteAutoDeleteObjectsCustomResourceBFAA9B42": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "SiteE53D7754"
+    }
+   },
+   "DependsOn": [
+    "SitePolicyC4000D7D"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Site/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "KnowledgeB6F5C7B3": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "BucketKeyEnabled": true,
+       "ServerSideEncryptionByDefault": {
+        "KMSMasterKeyID": {
+         "Fn::GetAtt": [
+          "DataKey17AFBB84",
+          "Arn"
+         ]
+        },
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "BucketName": {
+     "Fn::Join": [
+      "",
+      [
+       "sdlc-insights-knowledge-",
+       {
+        "Ref": "AWS::AccountId"
+       }
+      ]
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "NoncurrentVersionExpiration": {
+        "NoncurrentDays": 60
+       },
+       "Status": "Enabled"
+      }
+     ]
+    },
+    "LoggingConfiguration": {
+     "DestinationBucketName": {
+      "Ref": "AccessLogs8B620ECA"
+     },
+     "LogFilePrefix": "s3-knowledge/"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Knowledge/Resource"
+   }
+  },
+  "KnowledgePolicyC5D0F8C5": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "KnowledgeB6F5C7B3"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "KnowledgeB6F5C7B3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "KnowledgeB6F5C7B3",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutBucketPolicy",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "KnowledgeB6F5C7B3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "KnowledgeB6F5C7B3",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Knowledge/Policy/Resource"
+   }
+  },
+  "KnowledgeAutoDeleteObjectsCustomResource038FDDA7": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "KnowledgeB6F5C7B3"
+    }
+   },
+   "DependsOn": [
+    "KnowledgePolicyC5D0F8C5"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Knowledge/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "OriginVerifyED6A82E8": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "Header value proving API requests came through CloudFront.",
+    "GenerateSecretString": {
+     "ExcludePunctuation": true,
+     "PasswordLength": 40
+    },
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "Name": "sdlc-insights/origin-verify",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/OriginVerify/Resource"
+   }
+  },
+  "Guardrail": {
+   "Type": "AWS::Bedrock::Guardrail",
+   "Properties": {
+    "BlockedInputMessaging": "This question was blocked by the content safety guardrail.",
+    "BlockedOutputsMessaging": "The answer was blocked by the content safety guardrail.",
+    "ContentPolicyConfig": {
+     "FiltersConfig": [
+      {
+       "InputStrength": "HIGH",
+       "OutputStrength": "NONE",
+       "Type": "PROMPT_ATTACK"
+      },
+      {
+       "InputStrength": "MEDIUM",
+       "OutputStrength": "MEDIUM",
+       "Type": "HATE"
+      },
+      {
+       "InputStrength": "MEDIUM",
+       "OutputStrength": "MEDIUM",
+       "Type": "INSULTS"
+      },
+      {
+       "InputStrength": "HIGH",
+       "OutputStrength": "HIGH",
+       "Type": "SEXUAL"
+      },
+      {
+       "InputStrength": "MEDIUM",
+       "OutputStrength": "LOW",
+       "Type": "VIOLENCE"
+      },
+      {
+       "InputStrength": "LOW",
+       "OutputStrength": "NONE",
+       "Type": "MISCONDUCT"
+      }
+     ]
+    },
+    "Description": "Prompt-attack and harmful-content filters for the Class Insights chatbot",
+    "Name": "sdlc-insights-guardrail",
+    "SensitiveInformationPolicyConfig": {
+     "PiiEntitiesConfig": [
+      {
+       "Action": "ANONYMIZE",
+       "Type": "AWS_ACCESS_KEY"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "AWS_SECRET_KEY"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "PASSWORD"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "EMAIL"
+      },
+      {
+       "Action": "ANONYMIZE",
+       "Type": "CREDIT_DEBIT_CARD_NUMBER"
+      }
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Guardrail"
+   }
+  },
+  "GuardrailVersion": {
+   "Type": "AWS::Bedrock::GuardrailVersion",
+   "Properties": {
+    "Description": "Pinned version",
+    "GuardrailIdentifier": {
+     "Fn::GetAtt": [
+      "Guardrail",
+      "GuardrailId"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/GuardrailVersion"
+   }
+  },
+  "ChatLogs086E826C": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/sdlc-insights/chat",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatLogs/Resource"
+   }
+  },
+  "ChatFnServiceRoleC3825F1B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatFn/ServiceRole/Resource"
+   }
+  },
+  "ChatFnServiceRoleDefaultPolicyD5F3AC4B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "ChatJobs5DE2735F",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "KnowledgeB6F5C7B3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "KnowledgeB6F5C7B3",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "logs:FilterLogEvents",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/sdlc-advisor/*:*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/sdlc-insights/*:*"
+          ]
+         ]
+        }
+       ],
+       "Sid": "ReadAllowListedLogGroups"
+      },
+      {
+       "Action": [
+        "cloudformation:DescribeStacks",
+        "cloudformation:ListStackResources",
+        "cloudformation:DescribeStackEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-east-1:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcAdvisor*/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-east-1:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcInsights*/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-west-2:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcAdvisor*/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-west-2:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcInsights*/*"
+          ]
+         ]
+        }
+       ],
+       "Sid": "ReadClassStacks"
+      },
+      {
+       "Action": "cloudwatch:GetMetricData",
+       "Effect": "Allow",
+       "Resource": "*",
+       "Sid": "ReadMetrics"
+      },
+      {
+       "Action": "cloudwatch:DescribeAlarms",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:cloudwatch:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":alarm:*"
+         ]
+        ]
+       },
+       "Sid": "ReadAlarms"
+      },
+      {
+       "Action": "bedrock:InvokeModel",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:bedrock:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":inference-profile/us.anthropic.claude-sonnet-4-6"
+          ]
+         ]
+        },
+        "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-6",
+        "arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-sonnet-4-6",
+        "arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-sonnet-4-6"
+       ],
+       "Sid": "InvokeSelectedModelOnly"
+      },
+      {
+       "Action": "bedrock:ApplyGuardrail",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "Guardrail",
+         "GuardrailArn"
+        ]
+       },
+       "Sid": "ApplyGuardrail"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ChatFnServiceRoleDefaultPolicyD5F3AC4B",
+    "Roles": [
+     {
+      "Ref": "ChatFnServiceRoleC3825F1B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ChatFn5A5B3E47": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-sdlcins-assets-154833006816-us-west-2",
+     "S3Key": "15c008bcc23b6fb601c209dd006b1eff1e7a1d837729895fff6a557089ad2226.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Ref": "ChatJobs5DE2735F"
+      },
+      "MODEL_ID": "us.anthropic.claude-sonnet-4-6",
+      "GUARDRAIL_ID": {
+       "Fn::GetAtt": [
+        "Guardrail",
+        "GuardrailId"
+       ]
+      },
+      "GUARDRAIL_VERSION": {
+       "Fn::GetAtt": [
+        "GuardrailVersion",
+        "Version"
+       ]
+      },
+      "THINKING_BUDGET_TOKENS": "1024",
+      "MAX_OUTPUT_TOKENS": "3000",
+      "TOOL_CONFIG": {
+       "Fn::Join": [
+        "",
+        [
+         "{\"logGroups\":{\"advisor-api\":\"/sdlc-advisor/api\",\"advisor-worker\":\"/sdlc-advisor/worker\",\"advisor-presignup\":\"/sdlc-advisor/presignup\",\"advisor-api-access\":\"/sdlc-advisor/apiaccess\",\"insights-api\":\"/sdlc-insights/api\",\"insights-chat\":\"/sdlc-insights/chat\",\"insights-api-access\":\"/sdlc-insights/apiaccess\"},\"stacks\":[{\"name\":\"SdlcAdvisorEdge\",\"region\":\"us-east-1\",\"app\":\"Secure SDLC Advisor\"},{\"name\":\"SdlcAdvisorApp\",\"region\":\"us-west-2\",\"app\":\"Secure SDLC Advisor\"},{\"name\":\"SdlcInsightsEdge\",\"region\":\"us-east-1\",\"app\":\"Class Insights\"},{\"name\":\"SdlcInsightsApp\",\"region\":\"us-west-2\",\"app\":\"Class Insights\"}],\"knowledgeBucket\":\"",
+         {
+          "Ref": "KnowledgeB6F5C7B3"
+         },
+         "\",\"knowledgeKey\":\"projectknowledge.md\",\"alarmPrefixes\":[\"sdlc-advisor-\",\"sdlc-insights-\"],\"functions\":{\"advisor-worker\":\"sdlc-advisor-worker\",\"advisor-api\":\"sdlc-advisor-api\",\"insights-chat\":\"sdlc-insights-chat\",\"insights-api\":\"sdlc-insights-api\"},\"apis\":{\"advisor\":\"sdlc-advisor-api\",\"insights\":\"sdlc-insights-api\"}}"
+        ]
+       ]
+      },
+      "SERVICE_NAME": "sdlc-insights-chat"
+     }
+    },
+    "FunctionName": "sdlc-insights-chat",
+    "Handler": "index.handler",
+    "KmsKeyArn": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LoggingConfig": {
+     "LogGroup": {
+      "Ref": "ChatLogs086E826C"
+     }
+    },
+    "MemorySize": 512,
+    "ReservedConcurrentExecutions": 20,
+    "Role": {
+     "Fn::GetAtt": [
+      "ChatFnServiceRoleC3825F1B",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "Timeout": 180,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "ChatFnServiceRoleDefaultPolicyD5F3AC4B",
+    "ChatFnServiceRoleC3825F1B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatFn/Resource",
+    "aws:asset:path": "asset.15c008bcc23b6fb601c209dd006b1eff1e7a1d837729895fff6a557089ad2226",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ChatAsyncConfig27197DD2": {
+   "Type": "AWS::Lambda::EventInvokeConfig",
+   "Properties": {
+    "FunctionName": {
+     "Ref": "ChatFn5A5B3E47"
+    },
+    "MaximumEventAgeInSeconds": 300,
+    "MaximumRetryAttempts": 0,
+    "Qualifier": "$LATEST"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatAsyncConfig/Resource"
+   }
+  },
+  "ApiLogs3D05D88B": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/sdlc-insights/api",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ApiLogs/Resource"
+   }
+  },
+  "ApiFnServiceRoleD18AAE0E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ApiFn/ServiceRole/Resource"
+   }
+  },
+  "ApiFnServiceRoleDefaultPolicy56A1E6E5": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "ChatJobs5DE2735F",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "KnowledgeB6F5C7B3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "KnowledgeB6F5C7B3",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "DataKey17AFBB84",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ChatFn5A5B3E47",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ChatFn5A5B3E47",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "logs:FilterLogEvents",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/sdlc-advisor/*:*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/sdlc-insights/*:*"
+          ]
+         ]
+        }
+       ],
+       "Sid": "ReadAllowListedLogGroups"
+      },
+      {
+       "Action": [
+        "cloudformation:DescribeStacks",
+        "cloudformation:ListStackResources",
+        "cloudformation:DescribeStackEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-east-1:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcAdvisor*/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-east-1:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcInsights*/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-west-2:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcAdvisor*/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:cloudformation:us-west-2:",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":stack/SdlcInsights*/*"
+          ]
+         ]
+        }
+       ],
+       "Sid": "ReadClassStacks"
+      },
+      {
+       "Action": "cloudwatch:GetMetricData",
+       "Effect": "Allow",
+       "Resource": "*",
+       "Sid": "ReadMetrics"
+      },
+      {
+       "Action": "cloudwatch:DescribeAlarms",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:cloudwatch:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":alarm:*"
+         ]
+        ]
+       },
+       "Sid": "ReadAlarms"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApiFnServiceRoleDefaultPolicy56A1E6E5",
+    "Roles": [
+     {
+      "Ref": "ApiFnServiceRoleD18AAE0E"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApiFnE0725F78": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-sdlcins-assets-154833006816-us-west-2",
+     "S3Key": "f9e5694031b0608ff4163ab7471887c080f2df10274f5be1f8e9ef561c222f23.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Ref": "ChatJobs5DE2735F"
+      },
+      "CHAT_FUNCTION_NAME": {
+       "Ref": "ChatFn5A5B3E47"
+      },
+      "ORIGIN_VERIFY": {
+       "Fn::Join": [
+        "",
+        [
+         "{{resolve:secretsmanager:",
+         {
+          "Ref": "OriginVerifyED6A82E8"
+         },
+         ":SecretString:::}}"
+        ]
+       ]
+      },
+      "TOOL_CONFIG": {
+       "Fn::Join": [
+        "",
+        [
+         "{\"logGroups\":{\"advisor-api\":\"/sdlc-advisor/api\",\"advisor-worker\":\"/sdlc-advisor/worker\",\"advisor-presignup\":\"/sdlc-advisor/presignup\",\"advisor-api-access\":\"/sdlc-advisor/apiaccess\",\"insights-api\":\"/sdlc-insights/api\",\"insights-chat\":\"/sdlc-insights/chat\",\"insights-api-access\":\"/sdlc-insights/apiaccess\"},\"stacks\":[{\"name\":\"SdlcAdvisorEdge\",\"region\":\"us-east-1\",\"app\":\"Secure SDLC Advisor\"},{\"name\":\"SdlcAdvisorApp\",\"region\":\"us-west-2\",\"app\":\"Secure SDLC Advisor\"},{\"name\":\"SdlcInsightsEdge\",\"region\":\"us-east-1\",\"app\":\"Class Insights\"},{\"name\":\"SdlcInsightsApp\",\"region\":\"us-west-2\",\"app\":\"Class Insights\"}],\"knowledgeBucket\":\"",
+         {
+          "Ref": "KnowledgeB6F5C7B3"
+         },
+         "\",\"knowledgeKey\":\"projectknowledge.md\",\"alarmPrefixes\":[\"sdlc-advisor-\",\"sdlc-insights-\"],\"functions\":{\"advisor-worker\":\"sdlc-advisor-worker\",\"advisor-api\":\"sdlc-advisor-api\",\"insights-chat\":\"sdlc-insights-chat\",\"insights-api\":\"sdlc-insights-api\"},\"apis\":{\"advisor\":\"sdlc-advisor-api\",\"insights\":\"sdlc-insights-api\"}}"
+        ]
+       ]
+      },
+      "SERVICE_NAME": "sdlc-insights-api"
+     }
+    },
+    "FunctionName": "sdlc-insights-api",
+    "Handler": "index.handler",
+    "KmsKeyArn": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LoggingConfig": {
+     "LogGroup": {
+      "Ref": "ApiLogs3D05D88B"
+     }
+    },
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "ApiFnServiceRoleD18AAE0E",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "Timeout": 25,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "ApiFnServiceRoleDefaultPolicy56A1E6E5",
+    "ApiFnServiceRoleD18AAE0E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ApiFn/Resource",
+    "aws:asset:path": "asset.f9e5694031b0608ff4163ab7471887c080f2df10274f5be1f8e9ef561c222f23",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "WebClient697086FD": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AccessTokenValidity": 60,
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ClientName": "sdlc-insights-web",
+    "EnableTokenRevocation": true,
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "GenerateSecret": false,
+    "IdTokenValidity": 60,
+    "PreventUserExistenceErrors": "ENABLED",
+    "RefreshTokenValidity": 1440,
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "TokenValidityUnits": {
+     "AccessToken": "minutes",
+     "IdToken": "minutes",
+     "RefreshToken": "minutes"
+    },
+    "UserPoolId": "us-west-2_gBS6P1vxj"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/WebClient/Resource"
+   }
+  },
+  "ApiAccessLogsE9DF007D": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "/sdlc-insights/apiaccess",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ApiAccessLogs/Resource"
+   }
+  },
+  "ApiF70053CD": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "Class Insights API (via CloudFront only)",
+    "EndpointConfiguration": {
+     "Types": [
+      "REGIONAL"
+     ]
+    },
+    "Name": "sdlc-insights-api",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Resource"
+   }
+  },
+  "ApiDeploymentB17BE62D22b9d391df03b3cb73ea0e992f6103aa": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Class Insights API (via CloudFront only)",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "DependsOn": [
+    "ApiapichatidGETF0507C67",
+    "ApiapichatidAEFED5A5",
+    "ApiapichatPOST70239852",
+    "Apiapichat32253773",
+    "ApiapieventsGET02DB6142",
+    "Apiapievents1E35118F",
+    "ApiapihealthGET290CBEED",
+    "Apiapihealth94500BD4",
+    "ApiapiinventoryGETFC26D601",
+    "ApiapiinventoryD296937A",
+    "ApiapiknowledgeGET8CDDCD36",
+    "Apiapiknowledge7EA5D9B4",
+    "ApiapilogsGET1AF68514",
+    "Apiapilogs51194BA6",
+    "ApiapimetricsGET09A471BA",
+    "Apiapimetrics33E579EF",
+    "ApiapireasoningGETBE1F20C3",
+    "Apiapireasoning14D6133A",
+    "Apiapi0E601135",
+    "ApiapisourcesGETAC13E1F0",
+    "ApiapisourcesB60D72D4",
+    "ApiDefault4xx3D30C544",
+    "ApiDefault5xx350DA352"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
+   }
+  },
+  "ApiDeploymentStageprod3EB9684E": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "AccessLogSetting": {
+     "DestinationArn": {
+      "Fn::GetAtt": [
+       "ApiAccessLogsE9DF007D",
+       "Arn"
+      ]
+     },
+     "Format": "{\"requestId\":\"$context.requestId\",\"ip\":\"$context.identity.sourceIp\",\"method\":\"$context.httpMethod\",\"path\":\"$context.resourcePath\",\"status\":\"$context.status\",\"latencyMs\":\"$context.responseLatency\",\"user\":\"$context.authorizer.claims.sub\"}"
+    },
+    "DeploymentId": {
+     "Ref": "ApiDeploymentB17BE62D22b9d391df03b3cb73ea0e992f6103aa"
+    },
+    "MethodSettings": [
+     {
+      "DataTraceEnabled": false,
+      "HttpMethod": "*",
+      "LoggingLevel": "ERROR",
+      "MetricsEnabled": true,
+      "ResourcePath": "/*",
+      "ThrottlingBurstLimit": 40,
+      "ThrottlingRateLimit": 20
+     },
+     {
+      "DataTraceEnabled": false,
+      "HttpMethod": "POST",
+      "ResourcePath": "/~1api~1chat",
+      "ThrottlingBurstLimit": 6,
+      "ThrottlingRateLimit": 3
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    },
+    "StageName": "prod",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "TracingEnabled": true
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/DeploymentStage.prod/Resource"
+   }
+  },
+  "Apiapi0E601135": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "api",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/Resource"
+   }
+  },
+  "Apiapihealth94500BD4": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "health",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/health/Resource"
+   }
+  },
+  "ApiapihealthGETApiPermissionSdlcInsightsAppApi3FC628E9GETapihealthB3666030": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/health"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/health/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.health"
+   }
+  },
+  "ApiapihealthGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapihealthCB0807BF": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/health"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/health/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.health"
+   }
+  },
+  "ApiapihealthGET290CBEED": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapihealth94500BD4"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/health/GET/Resource"
+   }
+  },
+  "Apiapiknowledge7EA5D9B4": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "knowledge",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/knowledge/Resource"
+   }
+  },
+  "ApiapiknowledgeGETApiPermissionSdlcInsightsAppApi3FC628E9GETapiknowledge27923970": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/knowledge"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/knowledge/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.knowledge"
+   }
+  },
+  "ApiapiknowledgeGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapiknowledge39B5AF48": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/knowledge"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/knowledge/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.knowledge"
+   }
+  },
+  "ApiapiknowledgeGET8CDDCD36": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapiknowledge7EA5D9B4"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/knowledge/GET/Resource"
+   }
+  },
+  "ApiapiinventoryD296937A": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "inventory",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/inventory/Resource"
+   }
+  },
+  "ApiapiinventoryGETApiPermissionSdlcInsightsAppApi3FC628E9GETapiinventory8E9D71FD": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/inventory"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/inventory/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.inventory"
+   }
+  },
+  "ApiapiinventoryGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapiinventory7348FB79": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/inventory"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/inventory/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.inventory"
+   }
+  },
+  "ApiapiinventoryGETFC26D601": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiapiinventoryD296937A"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/inventory/GET/Resource"
+   }
+  },
+  "Apiapievents1E35118F": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "events",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/events/Resource"
+   }
+  },
+  "ApiapieventsGETApiPermissionSdlcInsightsAppApi3FC628E9GETapievents1FAADE8B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/events"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/events/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.events"
+   }
+  },
+  "ApiapieventsGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapievents76BF7873": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/events"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/events/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.events"
+   }
+  },
+  "ApiapieventsGET02DB6142": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapievents1E35118F"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/events/GET/Resource"
+   }
+  },
+  "Apiapilogs51194BA6": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "logs",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/logs/Resource"
+   }
+  },
+  "ApiapilogsGETApiPermissionSdlcInsightsAppApi3FC628E9GETapilogs90C00118": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/logs"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/logs/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.logs"
+   }
+  },
+  "ApiapilogsGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapilogsD4B31A8E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/logs"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/logs/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.logs"
+   }
+  },
+  "ApiapilogsGET1AF68514": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapilogs51194BA6"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/logs/GET/Resource"
+   }
+  },
+  "Apiapireasoning14D6133A": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "reasoning",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/reasoning/Resource"
+   }
+  },
+  "ApiapireasoningGETApiPermissionSdlcInsightsAppApi3FC628E9GETapireasoningCC4F850D": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/reasoning"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/reasoning/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.reasoning"
+   }
+  },
+  "ApiapireasoningGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapireasoningAF966A2B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/reasoning"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/reasoning/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.reasoning"
+   }
+  },
+  "ApiapireasoningGETBE1F20C3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapireasoning14D6133A"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/reasoning/GET/Resource"
+   }
+  },
+  "Apiapimetrics33E579EF": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "metrics",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/metrics/Resource"
+   }
+  },
+  "ApiapimetricsGETApiPermissionSdlcInsightsAppApi3FC628E9GETapimetrics329CD1F3": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/metrics"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/metrics/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.metrics"
+   }
+  },
+  "ApiapimetricsGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapimetricsE917906F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/metrics"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/metrics/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.metrics"
+   }
+  },
+  "ApiapimetricsGET09A471BA": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapimetrics33E579EF"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/metrics/GET/Resource"
+   }
+  },
+  "ApiapisourcesB60D72D4": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "sources",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/sources/Resource"
+   }
+  },
+  "ApiapisourcesGETApiPermissionSdlcInsightsAppApi3FC628E9GETapisourcesD896511A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/sources"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/sources/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.sources"
+   }
+  },
+  "ApiapisourcesGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapisourcesBC11F7C9": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/sources"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/sources/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.sources"
+   }
+  },
+  "ApiapisourcesGETAC13E1F0": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiapisourcesB60D72D4"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/sources/GET/Resource"
+   }
+  },
+  "Apiapichat32253773": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapi0E601135"
+    },
+    "PathPart": "chat",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/Resource"
+   }
+  },
+  "ApiapichatPOSTApiPermissionSdlcInsightsAppApi3FC628E9POSTapichat0464EAC2": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/POST/api/chat"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/POST/ApiPermission.SdlcInsightsAppApi3FC628E9.POST..api.chat"
+   }
+  },
+  "ApiapichatPOSTApiPermissionTestSdlcInsightsAppApi3FC628E9POSTapichat3AEDC2C6": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/POST/api/chat"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/POST/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.POST..api.chat"
+   }
+  },
+  "ApiapichatPOST70239852": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "Apiapichat32253773"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/POST/Resource"
+   }
+  },
+  "ApiapichatidAEFED5A5": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "Apiapichat32253773"
+    },
+    "PathPart": "{id}",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/{id}/Resource"
+   }
+  },
+  "ApiapichatidGETApiPermissionSdlcInsightsAppApi3FC628E9GETapichatidD961EE7A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/",
+       {
+        "Ref": "ApiDeploymentStageprod3EB9684E"
+       },
+       "/GET/api/chat/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/{id}/GET/ApiPermission.SdlcInsightsAppApi3FC628E9.GET..api.chat.{id}"
+   }
+  },
+  "ApiapichatidGETApiPermissionTestSdlcInsightsAppApi3FC628E9GETapichatidFF81166F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ApiFnE0725F78",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-west-2:154833006816:",
+       {
+        "Ref": "ApiF70053CD"
+       },
+       "/test-invoke-stage/GET/api/chat/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/{id}/GET/ApiPermission.Test.SdlcInsightsAppApi3FC628E9.GET..api.chat.{id}"
+   }
+  },
+  "ApiapichatidGETF0507C67": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "AuthorizerBD825682"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-west-2:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ApiFnE0725F78",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ApiapichatidAEFED5A5"
+    },
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default/api/chat/{id}/GET/Resource"
+   }
+  },
+  "ApiDefault4xx3D30C544": {
+   "Type": "AWS::ApiGateway::GatewayResponse",
+   "Properties": {
+    "ResponseTemplates": {
+     "application/json": "{\"error\":{\"code\":\"$context.error.responseType\",\"message\":$context.error.messageString,\"correlationId\":\"$context.requestId\"}}"
+    },
+    "ResponseType": "DEFAULT_4XX",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default4xx/Resource"
+   }
+  },
+  "ApiDefault5xx350DA352": {
+   "Type": "AWS::ApiGateway::GatewayResponse",
+   "Properties": {
+    "ResponseTemplates": {
+     "application/json": "{\"error\":{\"code\":\"$context.error.responseType\",\"message\":$context.error.messageString,\"correlationId\":\"$context.requestId\"}}"
+    },
+    "ResponseType": "DEFAULT_5XX",
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api/Default5xx/Resource"
+   }
+  },
+  "AuthorizerBD825682": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "AuthorizerResultTtlInSeconds": 300,
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "SdlcInsightsAppAuthorizerC7A840DF",
+    "ProviderARNs": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":cognito-idp:us-west-2:154833006816:userpool/us-west-2_gBS6P1vxj"
+       ]
+      ]
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ApiF70053CD"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Authorizer/Resource"
+   }
+  },
+  "SecurityHeadersE66B69D3": {
+   "Type": "AWS::CloudFront::ResponseHeadersPolicy",
+   "Properties": {
+    "ResponseHeadersPolicyConfig": {
+     "CustomHeadersConfig": {
+      "Items": [
+       {
+        "Header": "Permissions-Policy",
+        "Override": true,
+        "Value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+       },
+       {
+        "Header": "Cross-Origin-Opener-Policy",
+        "Override": true,
+        "Value": "same-origin"
+       }
+      ]
+     },
+     "Name": "sdlc-insights-security-headers",
+     "RemoveHeadersConfig": {
+      "Items": [
+       {
+        "Header": "Server"
+       }
+      ]
+     },
+     "SecurityHeadersConfig": {
+      "ContentSecurityPolicy": {
+       "ContentSecurityPolicy": {
+        "Fn::Join": [
+         "",
+         [
+          "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://cognito-idp.",
+          {
+           "Ref": "AWS::Region"
+          },
+          ".amazonaws.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+         ]
+        ]
+       },
+       "Override": true
+      },
+      "ContentTypeOptions": {
+       "Override": true
+      },
+      "FrameOptions": {
+       "FrameOption": "DENY",
+       "Override": true
+      },
+      "ReferrerPolicy": {
+       "Override": true,
+       "ReferrerPolicy": "strict-origin-when-cross-origin"
+      },
+      "StrictTransportSecurity": {
+       "AccessControlMaxAgeSec": 31536000,
+       "IncludeSubdomains": false,
+       "Override": true
+      }
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/SecurityHeaders/Resource"
+   }
+  },
+  "CdnOrigin1S3OriginAccessControl6AC0AEFC": {
+   "Type": "AWS::CloudFront::OriginAccessControl",
+   "Properties": {
+    "OriginAccessControlConfig": {
+     "Name": "SdlcInsightsAppCdnOrigin1S3OriginAccessControlA1261BAC",
+     "OriginAccessControlOriginType": "s3",
+     "SigningBehavior": "always",
+     "SigningProtocol": "sigv4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Cdn/Origin1/S3OriginAccessControl/Resource"
+   }
+  },
+  "Cdn9963B1AD": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Aliases": [
+      "sdlc-insights.awsteach.com"
+     ],
+     "CacheBehaviors": [
+      {
+       "AllowedMethods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT",
+        "PATCH",
+        "POST",
+        "DELETE"
+       ],
+       "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+       "Compress": true,
+       "OriginRequestPolicyId": "b689b0a8-53d0-40ab-baf2-68738e2966ac",
+       "PathPattern": "/api/*",
+       "ResponseHeadersPolicyId": {
+        "Ref": "SecurityHeadersE66B69D3"
+       },
+       "TargetOriginId": "SdlcInsightsAppCdnOrigin257B0733D",
+       "ViewerProtocolPolicy": "https-only"
+      }
+     ],
+     "Comment": "SDLC Class Insights",
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+      "Compress": true,
+      "ResponseHeadersPolicyId": {
+       "Ref": "SecurityHeadersE66B69D3"
+      },
+      "TargetOriginId": "SdlcInsightsAppCdnOrigin1C7384549",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2and3",
+     "IPV6Enabled": true,
+     "Logging": {
+      "Bucket": {
+       "Fn::GetAtt": [
+        "AccessLogs8B620ECA",
+        "RegionalDomainName"
+       ]
+      },
+      "Prefix": "cloudfront/"
+     },
+     "Origins": [
+      {
+       "DomainName": {
+        "Fn::GetAtt": [
+         "SiteE53D7754",
+         "RegionalDomainName"
+        ]
+       },
+       "Id": "SdlcInsightsAppCdnOrigin1C7384549",
+       "OriginAccessControlId": {
+        "Fn::GetAtt": [
+         "CdnOrigin1S3OriginAccessControl6AC0AEFC",
+         "Id"
+        ]
+       },
+       "S3OriginConfig": {
+        "OriginAccessIdentity": ""
+       }
+      },
+      {
+       "CustomOriginConfig": {
+        "OriginProtocolPolicy": "https-only",
+        "OriginReadTimeout": 30,
+        "OriginSSLProtocols": [
+         "TLSv1.2"
+        ]
+       },
+       "DomainName": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Ref": "ApiF70053CD"
+          },
+          ".execute-api.",
+          {
+           "Ref": "AWS::Region"
+          },
+          ".amazonaws.com"
+         ]
+        ]
+       },
+       "Id": "SdlcInsightsAppCdnOrigin257B0733D",
+       "OriginCustomHeaders": [
+        {
+         "HeaderName": "x-origin-verify",
+         "HeaderValue": {
+          "Fn::Join": [
+           "",
+           [
+            "{{resolve:secretsmanager:",
+            {
+             "Ref": "OriginVerifyED6A82E8"
+            },
+            ":SecretString:::}}"
+           ]
+          ]
+         }
+        }
+       ],
+       "OriginPath": "/prod"
+      }
+     ],
+     "PriceClass": "PriceClass_100",
+     "ViewerCertificate": {
+      "AcmCertificateArn": {
+       "Fn::GetAtt": [
+        "ExportsReader8B249524",
+        "/cdk/exports/SdlcInsightsApp/SdlcInsightsEdgeuseast1RefCert5C9FAEC1706BDAB9"
+       ]
+      },
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     },
+     "WebACLId": {
+      "Fn::GetAtt": [
+       "ExportsReader8B249524",
+       "/cdk/exports/SdlcInsightsApp/SdlcInsightsEdgeuseast1FnGetAttWebAclArnEFE01C59"
+      ]
+     }
+    },
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Cdn/Resource"
+   }
+  },
+  "AliasAEAD92310": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "Cdn9963B1AD",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z02882605B7GUS0L3VHX",
+    "Name": "sdlc-insights.awsteach.com.",
+    "Type": "A"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/AliasA/Resource"
+   }
+  },
+  "AliasAAAA067338AF": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "Cdn9963B1AD",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z02882605B7GUS0L3VHX",
+    "Name": "sdlc-insights.awsteach.com.",
+    "Type": "AAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/AliasAAAA/Resource"
+   }
+  },
+  "DeploySiteAwsCliLayer88B0EBE2": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "Content": {
+     "S3Bucket": "cdk-sdlcins-assets-154833006816-us-west-2",
+     "S3Key": "98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip"
+    },
+    "Description": "/opt/awscli/aws"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/DeploySite/AwsCliLayer/Resource",
+    "aws:asset:path": "asset.98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "DeploySiteCustomResource512MiB5775DB62": {
+   "Type": "Custom::CDKBucketDeployment",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92",
+      "Arn"
+     ]
+    },
+    "SourceBucketNames": [
+     "cdk-sdlcins-assets-154833006816-us-west-2",
+     "cdk-sdlcins-assets-154833006816-us-west-2"
+    ],
+    "SourceObjectKeys": [
+     "1c3fdb9c6982c416d56bb2375093d102e65340aaebd77bcf313dca00e75abab7.zip",
+     "b351d81b7ce1f2bdba9fab76159195f682da15c350eb260c39465fab8116997a.zip"
+    ],
+    "SourceMarkers": [
+     {},
+     {
+      "<<marker:0xbaba:0>>": {
+       "Fn::Join": [
+        "",
+        [
+         "\"",
+         {
+          "Ref": "AWS::Region"
+         },
+         "\""
+        ]
+       ]
+      },
+      "<<marker:0xbaba:1>>": {
+       "Fn::Join": [
+        "",
+        [
+         "\"",
+         {
+          "Ref": "WebClient697086FD"
+         },
+         "\""
+        ]
+       ]
+      }
+     }
+    ],
+    "SourceMarkersConfig": [
+     {},
+     {}
+    ],
+    "DestinationBucketName": {
+     "Ref": "SiteE53D7754"
+    },
+    "WaitForDistributionInvalidation": true,
+    "Prune": true,
+    "DistributionId": {
+     "Ref": "Cdn9963B1AD"
+    },
+    "DistributionPaths": [
+     "/*"
+    ],
+    "OutputObjectKeys": true
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/DeploySite/CustomResource-512MiB/Default"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::cdk-sdlcins-assets-154833006816-us-west-2"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::cdk-sdlcins-assets-154833006816-us-west-2/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "SiteE53D7754",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "SiteE53D7754",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudfront:GetInvalidation",
+        "cloudfront:CreateInvalidation"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726",
+    "Roles": [
+     {
+      "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-sdlcins-assets-154833006816-us-west-2",
+     "S3Key": "35328da138f26fbd9160297abc9a2522d93dbf75878cd5114a9c050419fc1ce0.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+     }
+    },
+    "Handler": "index.handler",
+    "Layers": [
+     {
+      "Ref": "DeploySiteAwsCliLayer88B0EBE2"
+     }
+    ],
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.13",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726",
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Resource",
+    "aws:asset:path": "asset.35328da138f26fbd9160297abc9a2522d93dbf75878cd5114a9c050419fc1ce0",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "Alarms04B5A0BF": {
+   "Type": "AWS::SNS::Topic",
+   "Properties": {
+    "KmsMasterKeyId": {
+     "Fn::GetAtt": [
+      "DataKey17AFBB84",
+      "Arn"
+     ]
+    },
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "TopicName": "sdlc-insights-alarms"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Alarms/Resource"
+   }
+  },
+  "AlarmsPolicy5C860CFE": {
+   "Type": "AWS::SNS::TopicPolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sns:Publish",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": "*",
+       "Resource": {
+        "Ref": "Alarms04B5A0BF"
+       },
+       "Sid": "AllowPublishThroughSSLOnly"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Topics": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Alarms/Policy/Resource"
+   }
+  },
+  "ChatFailures2BB73D34": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-insights-chat-failures",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "EvaluationPeriods": 1,
+    "MetricName": "ChatFailures",
+    "Namespace": "SdlcClassInsights",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "Threshold": 3,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatFailures/Resource"
+   }
+  },
+  "ChatFnErrors18E7D94B": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-insights-chat-fn-errors",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ChatFn5A5B3E47"
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "Threshold": 1,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ChatFnErrors/Resource"
+   }
+  },
+  "ApiFnErrors5127122E": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-insights-api-fn-errors",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "FunctionName",
+      "Value": {
+       "Ref": "ApiFnE0725F78"
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "Errors",
+    "Namespace": "AWS/Lambda",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "Threshold": 3,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ApiFnErrors/Resource"
+   }
+  },
+  "Api5xx3D9EE91A": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "Alarms04B5A0BF"
+     }
+    ],
+    "AlarmName": "sdlc-insights-api-5xx",
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "Dimensions": [
+     {
+      "Name": "ApiName",
+      "Value": "sdlc-insights-api"
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "5XXError",
+    "Namespace": "AWS/ApiGateway",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ],
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Api5xx/Resource"
+   }
+  },
+  "Dashboard9E4231ED": {
+   "Type": "AWS::CloudWatch::Dashboard",
+   "Properties": {
+    "DashboardBody": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"widgets\":[{\"type\":\"alarm\",\"width\":8,\"height\":6,\"x\":0,\"y\":0,\"properties\":{\"title\":\"Alarms\",\"alarms\":[\"",
+       {
+        "Fn::GetAtt": [
+         "ChatFailures2BB73D34",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "ChatFnErrors18E7D94B",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "ApiFnErrors5127122E",
+         "Arn"
+        ]
+       },
+       "\",\"",
+       {
+        "Fn::GetAtt": [
+         "Api5xx3D9EE91A",
+         "Arn"
+        ]
+       },
+       "\"]}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":8,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Chat questions / failures\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"SdlcClassInsights\",\"ChatQuestions\",{\"stat\":\"Sum\"}],[\"SdlcClassInsights\",\"ChatFailures\",{\"stat\":\"Sum\"}],[\"SdlcClassInsights\",\"ChatGuardrailBlocks\",{\"stat\":\"Sum\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":16,\"y\":0,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Chat tokens (incl. prompt-cache reads)\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"SdlcClassInsights\",\"InputTokens\",{\"stat\":\"Sum\"}],[\"SdlcClassInsights\",\"OutputTokens\",{\"stat\":\"Sum\"}],[\"SdlcClassInsights\",\"CacheReadTokens\",{\"stat\":\"Sum\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":0,\"y\":6,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Chat duration (ms)\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"SdlcClassInsights\",\"ChatDurationMs\"],[\"SdlcClassInsights\",\"ChatDurationMs\",{\"stat\":\"p90\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":8,\"y\":6,\"properties\":{\"view\":\"timeSeries\",\"title\":\"API requests / errors\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"AWS/ApiGateway\",\"Count\",\"ApiName\",\"sdlc-insights-api\",{\"stat\":\"SampleCount\"}],[\"AWS/ApiGateway\",\"4XXError\",\"ApiName\",\"sdlc-insights-api\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}],[\"AWS/ApiGateway\",\"5XXError\",\"ApiName\",\"sdlc-insights-api\",{\"stat\":\"Sum\",\"yAxis\":\"right\"}]],\"yAxis\":{}}},{\"type\":\"metric\",\"width\":8,\"height\":6,\"x\":16,\"y\":6,\"properties\":{\"view\":\"timeSeries\",\"title\":\"Tool calls per answer\",\"region\":\"",
+       {
+        "Ref": "AWS::Region"
+       },
+       "\",\"metrics\":[[\"SdlcClassInsights\",\"ToolCalls\"]],\"yAxis\":{}}}]}"
+      ]
+     ]
+    },
+    "DashboardName": "sdlc-insights-operations",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "sdlc-class-insights"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Dashboard/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/8VUTW/bMAz9Lc1Z1bJkxYDd3GTrhq1rEHe9DENAy6yjRBYNUU6WGf7vg6R8FesOBQbsYr1HiqIeSXkkR2+v5PACtnypyvWl0YXscg9qLWDLi25ds+w+405MHm1YMqOBA4mgF+XOQk1lIbt7KAw+jILvxlABJhp6wWPZXbdqjT64EvreDWr9U9vBu8F54pCRxzK6WKatWetpigY93hUrVJ4HvfiP0T9Ecs3IaLU7KUr8BbpSQO7BY432hRf7x8EHUdfAoWGoHHquwUKFTnZ55EFqQr0osHSk1rILvW7BlQ60EefkAR1rsr0wVLHsvlB146htwp4D7oWBuihhYanEFcuvcfnQWuU1WaGhlt2cDIaYuJ5KnlAYrUUHzOhZZmERJTaGdkHVXuv0aDiki5c+Znm/Qes/2Q2tcUL2UVfh+GeNM3S15iAqioAdur1IkWtbGfR0OvYAeqGostqT7L4xuhmRmRiNNlbzqaUX0OgKPG5hJ7s5ss8aHbXv4UlKsJ6x3EMVq5TAHJlapzA080j2ByV8i35JZTDt0U1KO0duyHLc/Icp6TjcmbPWL8npX+jiz+DIeqEMteWjI+ujjBj+EaFEx6cOPu+YavZOF22sYT6+c7rSNlMKmSdkvaM4ZH8xnwf3wlHr8Wosu2yOilyZkgaUoxcZACTWC7Ysu3tqtAp7Eojf023P6F7fFrxayi4z4Or0NwxgCrwsCFK2I+l7MWnZU/1sM566Zo42ukQXmxdnOjRV2+pJJ+9a37RxDG6haYJ3/5RMGMsFbFkZLbMtT4yOk9qL8Mjkil9tRm/k67dyeLFirS9da72uUc7TKoZyKIcXTVT6AEaXEKoZTsrJxMryb/1GV3MxBgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/CDKMetadata/Default"
+   }
+  },
+  "ExportsReader8B249524": {
+   "Type": "Custom::CrossRegionExportReader",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCrossRegionExportReaderCustomResourceProviderHandler46647B68",
+      "Arn"
+     ]
+    },
+    "ReaderProps": {
+     "region": "us-west-2",
+     "prefix": "SdlcInsightsApp",
+     "imports": {
+      "/cdk/exports/SdlcInsightsApp/SdlcInsightsEdgeuseast1RefCert5C9FAEC1706BDAB9": "{{resolve:ssm:/cdk/exports/SdlcInsightsApp/SdlcInsightsEdgeuseast1RefCert5C9FAEC1706BDAB9}}",
+      "/cdk/exports/SdlcInsightsApp/SdlcInsightsEdgeuseast1FnGetAttWebAclArnEFE01C59": "{{resolve:ssm:/cdk/exports/SdlcInsightsApp/SdlcInsightsEdgeuseast1FnGetAttWebAclArnEFE01C59}}"
+     }
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/ExportsReader/Resource/Default"
+   }
+  },
+  "CustomCrossRegionExportReaderCustomResourceProviderRole10531BBD": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:",
+            {
+             "Ref": "AWS::Partition"
+            },
+            ":ssm:us-west-2:154833006816:parameter/cdk/exports/SdlcInsightsApp/*"
+           ]
+          ]
+         },
+         "Action": [
+          "ssm:AddTagsToResource",
+          "ssm:RemoveTagsFromResource",
+          "ssm:GetParameters"
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Custom::CrossRegionExportReaderCustomResourceProvider/Role"
+   }
+  },
+  "CustomCrossRegionExportReaderCustomResourceProviderHandler46647B68": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-sdlcins-assets-154833006816-us-west-2",
+     "S3Key": "f8b7112ff78fd0b6fab4c6b048fc1da9945198135db9a1e6b1d5cb4599d5a3d2.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCrossRegionExportReaderCustomResourceProviderRole10531BBD",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x"
+   },
+   "DependsOn": [
+    "CustomCrossRegionExportReaderCustomResourceProviderRole10531BBD"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcInsightsApp/Custom::CrossRegionExportReaderCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.f8b7112ff78fd0b6fab4c6b048fc1da9945198135db9a1e6b1d5cb4599d5a3d2",
+    "aws:asset:property": "Code"
+   }
+  }
+ },
+ "Outputs": {
+  "ApiEndpoint4F160690": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ApiF70053CD"
+      },
+      ".execute-api.us-west-2.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ApiDeploymentStageprod3EB9684E"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "Url": {
+   "Value": "https://sdlc-insights.awsteach.com"
+  },
+  "KnowledgeBucket": {
+   "Value": {
+    "Ref": "KnowledgeB6F5C7B3"
+   }
+  },
+  "UserPoolClientId": {
+   "Value": {
+    "Ref": "WebClient697086FD"
+   }
+  },
+  "ApiId": {
+   "Value": {
+    "Ref": "ApiF70053CD"
+   }
+  },
+  "DistributionId": {
+   "Value": {
+    "Ref": "Cdn9963B1AD"
+   }
+  },
+  "GuardrailId": {
+   "Value": {
+    "Fn::GetAtt": [
+     "Guardrail",
+     "GuardrailId"
+    ]
+   }
+  }
+ },
+ "Mappings": {
+  "AWSCloudFrontPartitionHostedZoneIdMap": {
+   "aws": {
+    "zoneId": "Z2FDTNDATAQYW2"
+   },
+   "aws-cn": {
+    "zoneId": "Z3RFFRIM2A3IF5"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/sdlcins/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

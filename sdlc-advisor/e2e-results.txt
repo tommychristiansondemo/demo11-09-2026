@@ -1,0 +1,54 @@
+== DNS / TLS
+  PASS  DNS A record resolves
+  PASS  DNS AAAA record resolves
+  PASS  Certificate valid for demo.awsteach.com
+  PASS  HTTP redirects to HTTPS
+  PASS  TLS 1.1 refused
+== Security headers
+  PASS  header strict-transport-security
+  PASS  header content-security-policy
+  PASS  header x-frame-options
+  PASS  header x-content-type-options
+  PASS  header referrer-policy
+  PASS  header permissions-policy
+  PASS  CSP forbids framing
+  PASS  config.json served
+== API basics
+  PASS  GET /api/health = 200
+  PASS  health has security headers
+  PASS  unauthenticated list = 401
+  PASS  direct execute-api bypass = 403
+  PASS  correlation id echoed
+== Authentication (self sign-up, no verification)
+  PASS  sign-up auto-confirms user 1 (6-char password)
+  PASS  sign-up auto-confirms user 2
+  PASS  short password rejected
+  PASS  sign-in returns tokens
+  PASS  authenticated list = 200
+== Validation
+  PASS  missing synthetic confirmation = 400
+  PASS  unsupported component = 400
+  PASS  invalid JSON = 400
+  PASS  oversize body blocked (WAF 403 or API 413)
+  PASS  invalid id = 400
+== End-to-end AI assessment
+  PASS  create = 202
+  PASS  email redacted before processing (redactions=1)
+  ... finished with status COMPLETE after 83s
+  PASS  assessment COMPLETE
+  PASS  stored input has no raw email
+  PASS  threat model has STRIDE entries
+  PASS  checklist has P0 items
+  PASS  user stories with acceptance criteria
+  PASS  markdown report generated
+  PASS  user 2 cannot read user 1's assessment
+  PASS  listed in user 1 history
+  PASS  not in user 2 history
+  PASS  delete = 200
+  PASS  deleted item = 404
+== Logging hygiene
+  PASS  logs contain correlation IDs
+  PASS  logs do not contain the description
+
+RESULT: 43 passed, 0 failed
+RC=0

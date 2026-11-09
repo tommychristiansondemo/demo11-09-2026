@@ -1,0 +1,1938 @@
+{
+  "/SdlcAdvisorApp": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM4[Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole]": "AWS-recommended minimal managed policies: Lambda log delivery and API Gateway account-level log push."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM4[Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs]": "AWS-recommended minimal managed policies: Lambda log delivery and API Gateway account-level log push."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Resource::*]": "X-Ray PutTraceSegments/PutTelemetryRecords do not support resource-level permissions."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Action::kms:GenerateDataKey*]": "KMS action families granted by grantEncryptDecrypt on the single application CMK only."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Action::kms:ReEncrypt*]": "KMS action families granted by grantEncryptDecrypt on the single application CMK only."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Resource::<WorkerFn847949AF.Arn>:*]": "Allows invoking versions/aliases of the single worker function only."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Action::s3:Abort*]": "CDK-managed BucketDeployment helper, scoped to the CDK asset bucket and the site bucket."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Action::s3:DeleteObject*]": "CDK-managed BucketDeployment helper, scoped to the CDK asset bucket and the site bucket."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Action::s3:GetBucket*]": "CDK-managed BucketDeployment helper, scoped to the CDK asset bucket and the site bucket."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Action::s3:GetObject*]": "CDK-managed BucketDeployment helper, scoped to the CDK asset bucket and the site bucket."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Action::s3:List*]": "CDK-managed BucketDeployment helper, scoped to the CDK asset bucket and the site bucket."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Resource::arn:<AWS::Partition>:s3:::cdk-sdlcadv-assets-154833006816-us-west-2/*]": "CDK-managed BucketDeployment helper, scoped to the CDK asset bucket and the site bucket."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-IAM5[Resource::<SiteE53D7754.Arn>/*]": "CDK-managed BucketDeployment helper, scoped to the CDK asset bucket and the site bucket."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-L1": "Application functions use Node.js 24 (latest). The remaining finding is the CDK-managed BucketDeployment provider whose runtime is controlled by aws-cdk-lib."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-COG1": "Demo requirement: password policy intentionally set to the Cognito minimum (6 characters, no complexity). Production must use a strong policy."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-COG2": "Demo requirement: MFA disabled so students can self-register many test accounts quickly. Production must enable MFA."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-COG8": "Cognito Plus tier (threat protection) incurs per-MAU cost and is not justified for a one-day class; WAF rate limiting and API throttling provide abuse protection."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-APIG2": "Request validation is implemented in the Lambda (strict allow-list schema, size limits, unit-tested) to keep rules in one place."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-APIG3": "The API is fronted by CloudFront with an AWS WAF web ACL; direct execute-api calls are rejected by the origin-verify header check."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-APIG4": "/api/health is intentionally unauthenticated for Route 53 health checks and returns no data; all other routes use the Cognito authorizer."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-COG4": "/api/health is intentionally unauthenticated for Route 53 health checks and returns no data; all other routes use the Cognito authorizer."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-SMG4": "The origin-verify secret is consumed by CloudFront as a static custom header; rotation needs a coordinated redeploy and is out of scope for a one-day demo."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "AwsSolutions::AwsSolutions-CFR1": "No geo restriction: students may attend from any location."
+      },
+      "trace": [
+        "    ...Validations.acknowledge in aws-cdk-lib...",
+        "    at /home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6: (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:8)",
+        "    at Array.forEach (:)",
+        "    at ack (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:6:51)",
+        "    at applyNagSuppressions (/home/tommy/demo/sdlc-advisor/lib/nag-suppressions.ts:11:3)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:48:21)",
+        "    ...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:warning",
+      "data": "No cross-stack-reference strength configured, defaulting to \"strong\". We recommend you set feature flag \"@aws-cdk/core:defaultCrossStackReferences\" to \"both\", then deploy everywhere, then set it to \"weak\". Alternatively, set it to \"strong\" explicitly to lock in the current producer-protecting behavior. (See: https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/README.md#reference-strength) [ack: @aws-cdk/core:crossStackReferencesDefaultStrong]",
+      "trace": [
+        "Annotations.addMessage (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/annotations.js:1:3506)",
+        "Annotations.addWarningV2 (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/annotations.js:1:2194)",
+        "resolveValue (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/private/refs.js:1:7177)",
+        "resolveReferencesInElements (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/private/refs.js:1:5045)",
+        "resolveReferences (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/private/refs.js:1:4718)",
+        "prepareApp (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/private/prepare-app.js:1:1240)",
+        "synthesize (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2625)",
+        "App.synth (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/stage.js:1:5061)",
+        "App.synth (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/app.js:1:5364)",
+        "process.<anonymous> (/home/tommy/demo/sdlc-advisor/node_modules/aws-cdk-lib/core/lib/app.js:1:4274)",
+        "Object.onceWrapper (node:events:631:26)",
+        "process.emit (node:events:509:28)",
+        "process.emit (node:domain:489:12)",
+        "process.emit.sharedData.processEmitHook.installedValue [as emit] (/home/tommy/demo/sdlc-advisor/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+      ]
+    },
+    {
+      "type": "aws:cdk:templateFile",
+      "data": "SdlcAdvisorApp.template.json"
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "project",
+          "value": "secure-sdlc-advisor"
+        }
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Assessments": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "AssessmentsF491DDCD"
+      }
+    }
+  ],
+  "/SdlcAdvisorApp/AccessLogs": [
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "CloudFormation-Validate::W3045": "accessControl is deprecated, but we are still using it for historical reasons."
+      },
+      "trace": [
+        "    ...new Bucket2 in aws-cdk-lib...",
+        "    at new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:97:24)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "    ...node internals, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:acknowledged-rules",
+      "data": {
+        "CloudFormation-Validate::W3045": "accessControl is deprecated, but we are still using it for historical reasons."
+      },
+      "trace": [
+        "    ...new Bucket2 in aws-cdk-lib...",
+        "    at new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:108:25)",
+        "    at <anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "    ...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+    {
+      "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+      "data": true
+    }
+  ],
+  "/SdlcAdvisorApp/Guardrail": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Guardrail"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:166:23)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/GuardrailVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "GuardrailVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:186:30)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/AWSCloudFrontPartitionHostedZoneIdMap": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AWSCloudFrontPartitionHostedZoneIdMap"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new ARecord2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:438:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/HealthCheck": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HealthCheck"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:441:25)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB": [
+    {
+      "type": "aws:cdk:is-custom-resource-handler-singleton",
+      "data": true
+    },
+    {
+      "type": "aws:cdk:is-custom-resource-handler-runtime-family",
+      "data": 2
+    }
+  ],
+  "/SdlcAdvisorApp/Url": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Url"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:550:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/DistributionId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DistributionId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:551:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/DistributionDomain": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DistributionDomain"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:552:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/UserPoolId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:553:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/UserPoolClientId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolClientId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:554:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:555:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/TableName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TableName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:556:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/GuardrailId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "GuardrailId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:557:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/DashboardName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DashboardName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:558:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/SiteBucket": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SiteBucket"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:559:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::CrossRegionExportReaderCustomResourceProvider": [
+    {
+      "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+      "data": true
+    }
+  ],
+  "/SdlcAdvisorApp/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/DataKey/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DataKey17AFBB84"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Key2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:48:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Assessments/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AssessmentsF491DDCD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new TableV22 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:77:19)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/AccessLogs/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AccessLogs8B620ECA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:87:24)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketAutoDeleteObjects"
+      }
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Site/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SiteE53D7754"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:97:24)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketAutoDeleteObjects"
+      }
+    }
+  ],
+  "/SdlcAdvisorApp/TrailBucket/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TrailBucketA831CE63"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:108:25)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketAutoDeleteObjects"
+      }
+    }
+  ],
+  "/SdlcAdvisorApp/Trail/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Trail022F0CF2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Trail2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:143:19)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/OriginVerify/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "OriginVerifyED6A82E8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Secret2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:154:26)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/WorkerLogs/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerLogsC1193B08"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new LogGroup2 in aws-cdk-lib...",
+        "logGroup (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:69:40)",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:207:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/WorkerFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerFn847949AF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:200:22)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/WorkerAsyncConfig/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerAsyncConfig6C8156C2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new EventInvokeConfig2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:218:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiLogs/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiLogs3D05D88B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new LogGroup2 in aws-cdk-lib...",
+        "logGroup (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:69:40)",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:243:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiFnE0725F78"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:237:19)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/PreSignUpLogs/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PreSignUpLogsA7242E9C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new LogGroup2 in aws-cdk-lib...",
+        "logGroup (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:69:40)",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:263:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/PreSignUpFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PreSignUpFn7227C88E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:257:25)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/UserPool/PreSignUpCognito": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolPreSignUpCognito3AFF8F1F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPool2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:267:22)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/UserPool/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPool6BA7E5F2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPool2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:267:22)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiAccessLogs/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiAccessLogsE9DF007D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new LogGroup2 in aws-cdk-lib...",
+        "logGroup (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:69:40)",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:299:24)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiF70053CD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:300:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Account": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiAccountA18C9B29"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:300:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Endpoint": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiEndpoint4F160690"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:300:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Authorizer/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AuthorizerBD825682"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new CognitoUserPoolsAuthorizer2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:335:24)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/SecurityHeaders/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SecurityHeadersE66B69D3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new ResponseHeadersPolicy2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:361:21)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Cdn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Cdn9963B1AD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Distribution2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:404:26)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/AliasA/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AliasAEAD92310"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new ARecord2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:438:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/AliasAAAA/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AliasAAAA067338AF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new AaaaRecord2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:439:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB6723FB92"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new BucketDeployment2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:456:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Alarms/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Alarms04B5A0BF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Topic2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:477:19)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api5xxAlarm/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Api5xxAlarm31F257DC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Alarm2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:485:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiLatencyAlarm/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiLatencyAlarm453002C0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Alarm2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:490:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiFnErrorsAlarm/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiFnErrorsAlarmEDB69D1D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Alarm2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:495:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/WorkerErrorsAlarm/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerErrorsAlarm1932B217"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Alarm2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:500:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/WorkerThrottlesAlarm/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerThrottlesAlarm3D9E14E4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Alarm2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:505:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/AssessmentFailuresAlarm/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AssessmentFailuresAlarmF55DD034"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Alarm2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:510:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Dashboard/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Dashboard9E4231ED"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Dashboard2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:521:23)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::CrossRegionExportReaderCustomResourceProvider/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCrossRegionExportReaderCustomResourceProviderRole10531BBD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::CrossRegionExportReaderCustomResourceProvider/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCrossRegionExportReaderCustomResourceProviderHandler46647B68"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/DataKey/Alias/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DataKeyAliasF989EB84"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Key2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:48:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/AccessLogs/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AccessLogsPolicyABDC4D2D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:87:24)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)"
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketPolicyStatements"
+      }
+    }
+  ],
+  "/SdlcAdvisorApp/AccessLogs/AutoDeleteObjectsCustomResource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AccessLogsAutoDeleteObjectsCustomResourceA1409250"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Site/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SitePolicyC4000D7D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:97:24)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)"
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketPolicyStatements"
+      }
+    }
+  ],
+  "/SdlcAdvisorApp/Site/AutoDeleteObjectsCustomResource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SiteAutoDeleteObjectsCustomResourceBFAA9B42"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/TrailBucket/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TrailBucketPolicyFEBC3C5C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:108:25)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)"
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketPolicyStatements"
+      }
+    }
+  ],
+  "/SdlcAdvisorApp/TrailBucket/AutoDeleteObjectsCustomResource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TrailBucketAutoDeleteObjectsCustomResource8D1A7617"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/WorkerFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerFnServiceRole66434362"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:200:22)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiFnServiceRoleD18AAE0E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:237:19)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/PreSignUpFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PreSignUpFnServiceRoleC270C061"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:257:25)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/UserPool/WebClient/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolWebClient4C9370B0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addClient in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:287:37)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/CloudWatchRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiCloudWatchRole73EC6FC4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:300:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Deployment/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiDeploymentB17BE62Df901268de7513924d76510bc51c940b5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:300:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/DeploymentStage.prod/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiDeploymentStageprod3EB9684E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new RestApi2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:300:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default4xx/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiDefault4xx3D30C544"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addGatewayResponse in aws-cdk-lib...",
+        "jsonError (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:342:69)",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:347:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default5xx/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiDefault5xx350DA352"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addGatewayResponse in aws-cdk-lib...",
+        "jsonError (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:342:69)",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:348:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/DeploySite/AwsCliLayer/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DeploySiteAwsCliLayer88B0EBE2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new BucketDeployment2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:456:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/DeploySite/CustomResource-512MiB/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DeploySiteCustomResource512MiB5775DB62"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new BucketDeployment2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:456:7)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleBA21DBC1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Alarms/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AlarmsPolicy5C860CFE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Topic2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:477:19)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ExportsReader/Resource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsReader8B249524"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/WorkerFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WorkerFnServiceRoleDefaultPolicy81568881"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/ApiFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiFnServiceRoleDefaultPolicy56A1E6E5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/PreSignUpFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PreSignUpFnServiceRoleDefaultPolicy21B404FA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Apiapi0E601135"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...RootResource.addResource in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:350:30)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Cdn/Origin1/S3OriginAccessControl/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CdnOrigin1S3OriginAccessControl6AC0AEFC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Distribution2 in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:404:26)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiBServiceRoleDefaultPolicy96C3E726"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/health/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Apiapihealth94500BD4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addResource in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:351:13)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsED58B2BC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addResource in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:352:33)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/health/GET/ApiPermission.SdlcAdvisorAppApiC794DD78.GET..api.health": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapihealthGETApiPermissionSdlcAdvisorAppApiC794DD78GETapihealthF77A7F19"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:351:35)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/health/GET/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.GET..api.health": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapihealthGETApiPermissionTestSdlcAdvisorAppApiC794DD78GETapihealth9346CB75"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:351:35)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/health/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapihealthGET290CBEED"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:351:35)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/GET/ApiPermission.SdlcAdvisorAppApiC794DD78.GET..api.assessments": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsGETApiPermissionSdlcAdvisorAppApiC794DD78GETapiassessmentsED1E85D6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:353:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/GET/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.GET..api.assessments": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsGETApiPermissionTestSdlcAdvisorAppApiC794DD78GETapiassessmentsD62F5A57"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:353:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsGETB101870F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:353:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/POST/ApiPermission.SdlcAdvisorAppApiC794DD78.POST..api.assessments": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsPOSTApiPermissionSdlcAdvisorAppApiC794DD78POSTapiassessments70AD7CBD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:354:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/POST/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.POST..api.assessments": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsPOSTApiPermissionTestSdlcAdvisorAppApiC794DD78POSTapiassessments5DDF2D6C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:354:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsPOST2D800375"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:354:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/{id}/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsidBE0D93F6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addResource in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:355:29)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/{id}/GET/ApiPermission.SdlcAdvisorAppApiC794DD78.GET..api.assessments.{id}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsidGETApiPermissionSdlcAdvisorAppApiC794DD78GETapiassessmentsidB6C324DB"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:356:9)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/{id}/GET/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.GET..api.assessments.{id}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsidGETApiPermissionTestSdlcAdvisorAppApiC794DD78GETapiassessmentsidDB69EDD5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:356:9)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/{id}/GET/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsidGET6F4EB704"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:356:9)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/{id}/DELETE/ApiPermission.SdlcAdvisorAppApiC794DD78.DELETE..api.assessments.{id}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsidDELETEApiPermissionSdlcAdvisorAppApiC794DD78DELETEapiassessmentsid04EF86F3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:357:9)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/{id}/DELETE/ApiPermission.Test.SdlcAdvisorAppApiC794DD78.DELETE..api.assessments.{id}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsidDELETEApiPermissionTestSdlcAdvisorAppApiC794DD78DELETEapiassessmentsidCFAF6ACC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:357:9)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcAdvisorApp/Api/Default/api/assessments/{id}/DELETE/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiapiassessmentsidDELETEA0FEA86A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...PropertyInjectable.addMethod in aws-cdk-lib...",
+        "new AppStack (/home/tommy/demo/sdlc-advisor/lib/app-stack.ts:357:9)",
+        "<anonymous> (/home/tommy/demo/sdlc-advisor/bin/app.ts:32:18)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ]
+}

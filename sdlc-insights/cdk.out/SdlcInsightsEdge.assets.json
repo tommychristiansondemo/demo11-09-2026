@@ -1,0 +1,36 @@
+{
+  "version": "55.0.0",
+  "files": {
+    "08b23c75a1fe108c9fbd7896f6d7a668289c804be7852d611aecf2a0b501279f": {
+      "displayName": "SdlcInsightsEdge/Custom::CrossRegionExportWriterCustomResourceProvider Code",
+      "source": {
+        "path": "asset.08b23c75a1fe108c9fbd7896f6d7a668289c804be7852d611aecf2a0b501279f",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-east-1-c2dff368": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-east-1",
+          "objectKey": "08b23c75a1fe108c9fbd7896f6d7a668289c804be7852d611aecf2a0b501279f.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-east-1"
+        }
+      }
+    },
+    "9f2192d419cb712a65d5aa58b8ce3896a5c086594319148b2b1d503be5c3d8fe": {
+      "displayName": "SdlcInsightsEdge Template",
+      "source": {
+        "path": "SdlcInsightsEdge.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "154833006816-us-east-1-e7cfb914": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-east-1",
+          "objectKey": "9f2192d419cb712a65d5aa58b8ce3896a5c086594319148b2b1d503be5c3d8fe.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

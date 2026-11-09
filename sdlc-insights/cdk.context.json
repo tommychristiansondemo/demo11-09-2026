@@ -1,0 +1,10 @@
+{
+  "hosted-zone:account=154833006816:domainName=awsteach.com:region=us-east-1": {
+    "Id": "/hostedzone/Z02882605B7GUS0L3VHX",
+    "Name": "awsteach.com."
+  },
+  "hosted-zone:account=154833006816:domainName=awsteach.com:region=us-west-2": {
+    "Id": "/hostedzone/Z02882605B7GUS0L3VHX",
+    "Name": "awsteach.com."
+  }
+}

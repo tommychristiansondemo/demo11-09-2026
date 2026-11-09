@@ -1,0 +1,11 @@
+{
+  "app": "npx ts-node --prefer-ts-exts bin/app.ts",
+  "context": {
+    "@aws-cdk/core:bootstrapQualifier": "sdlcadv",
+    "domainName": "demo.awsteach.com",
+    "hostedZoneName": "awsteach.com",
+    "modelId": "us.anthropic.claude-sonnet-4-6",
+    "historyTtlDays": 7,
+    "insightsUrl": "https://sdlc-insights.awsteach.com"
+  }
+}

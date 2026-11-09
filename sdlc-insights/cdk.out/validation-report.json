@@ -1,0 +1,724 @@
+{
+  "version": "55.0.0",
+  "title": "Validation Report",
+  "pluginReports": [
+    {
+      "pluginName": "AwsSolutions",
+      "conclusion": "success",
+      "violations": [],
+      "suppressedViolations": [
+        {
+          "ruleName": "AwsSolutions-SMG4",
+          "description": "The secret does not have automatic rotation scheduled. AWS Secrets Manager can be configured to automatically rotate the secret for a secured service or database.",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/OriginVerify/Resource",
+              "constructFqn": "aws-cdk-lib.aws_secretsmanager.CfnSecret",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...new Secret2 in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:95:26)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node, ts-node..."
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-SMG4",
+          "reason": "Origin-verify secret is a static CloudFront custom header; rotation is out of scope for a one-day demo.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM4[Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole]",
+          "description": "The IAM user, role, or group uses AWS managed policies. An AWS managed policy is a standalone policy that is created and administered by AWS. Currently, many AWS managed policies do not restrict resource scope. Replace AWS managed policies with system specific (customer) managed policies.This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Policy::<policy>' for AWS managed policies. Example: appliesTo: ['Policy::arn:<AWS::Partition>:iam::aws:policy/foo'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnRole",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...new NodejsFunction in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:159:20)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node..."
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnRole",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...new NodejsFunction in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:182:19)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node..."
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnRole",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM4[Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole]",
+          "reason": "AWS-recommended minimal managed policy for Lambda log delivery.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::*]",
+          "reason": "cloudwatch:GetMetricData and X-Ray PutTraceSegments do not support resource-level permissions.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Action::kms:ReEncrypt*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Action::kms:ReEncrypt*]",
+          "reason": "KMS action families granted on the single Class Insights CMK only.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Action::kms:GenerateDataKey*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Action::kms:GenerateDataKey*]",
+          "reason": "KMS action families granted on the single Class Insights CMK only.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Action::s3:GetObject*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Action::s3:GetObject*]",
+          "reason": "Read-only access to the knowledge bucket (projectknowledge.md) only.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Action::s3:GetBucket*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Action::s3:GetBucket*]",
+          "reason": "Read-only access to the knowledge bucket (projectknowledge.md) only.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Action::s3:List*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Action::s3:List*]",
+          "reason": "Read-only access to the knowledge bucket (projectknowledge.md) only.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::<KnowledgeB6F5C7B3.Arn>/*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::<KnowledgeB6F5C7B3.Arn>/*]",
+          "reason": "Read-only access to the knowledge bucket (projectknowledge.md) only.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:aws:logs:<AWS::Region>:<AWS::AccountId>:log-group:/sdlc-advisor/*:*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:aws:logs:<AWS::Region>:<AWS::AccountId>:log-group:/sdlc-advisor/*:*]",
+          "reason": "logs:FilterLogEvents limited to the two applications' log-group prefixes (never /aws/lambda or other apps).",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:aws:logs:<AWS::Region>:<AWS::AccountId>:log-group:/sdlc-insights/*:*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:aws:logs:<AWS::Region>:<AWS::AccountId>:log-group:/sdlc-insights/*:*]",
+          "reason": "logs:FilterLogEvents limited to the two applications' log-group prefixes (never /aws/lambda or other apps).",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-east-1:<AWS::AccountId>:stack/SdlcAdvisor*/*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-east-1:<AWS::AccountId>:stack/SdlcAdvisor*/*]",
+          "reason": "Read-only CloudFormation describe/list on the four class stacks; the trailing wildcard is the stack-id suffix CloudFormation appends to every stack ARN.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-east-1:<AWS::AccountId>:stack/SdlcInsights*/*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-east-1:<AWS::AccountId>:stack/SdlcInsights*/*]",
+          "reason": "Read-only CloudFormation describe/list on the four class stacks; the trailing wildcard is the stack-id suffix CloudFormation appends to every stack ARN.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-west-2:<AWS::AccountId>:stack/SdlcAdvisor*/*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-west-2:<AWS::AccountId>:stack/SdlcAdvisor*/*]",
+          "reason": "Read-only CloudFormation describe/list on the four class stacks; the trailing wildcard is the stack-id suffix CloudFormation appends to every stack ARN.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-west-2:<AWS::AccountId>:stack/SdlcInsights*/*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:aws:cloudformation:us-west-2:<AWS::AccountId>:stack/SdlcInsights*/*]",
+          "reason": "Read-only CloudFormation describe/list on the four class stacks; the trailing wildcard is the stack-id suffix CloudFormation appends to every stack ARN.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:aws:cloudwatch:<AWS::Region>:<AWS::AccountId>:alarm:*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ChatFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            },
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:aws:cloudwatch:<AWS::Region>:<AWS::AccountId>:alarm:*]",
+          "reason": "cloudwatch:DescribeAlarms (read-only) is authorised against alarm:* when AlarmNamePrefix is used; the code only queries the two applications' prefixes.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::<ChatFn5A5B3E47.Arn>:*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/ApiFn/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::<ChatFn5A5B3E47.Arn>:*]",
+          "reason": "Invoke versions/aliases of the single chat function only.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-APIG2",
+          "description": "The REST API does not have request validation enabled. The API should have basic request validation enabled. If the API is integrated with custom source (Lambda, ECS, etc..) in the backend, deeper input validation should be considered for implementation.",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Api/Resource",
+              "constructFqn": "aws-cdk-lib.aws_apigateway.CfnRestApi",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...new RestApi2 in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:202:17)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node, ts-node..."
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-APIG2",
+          "reason": "Request validation is implemented and unit-tested in the Lambda (allow-listed fields, lengths, alternating history).",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-APIG3",
+          "description": "The REST API stage is not associated with AWS WAFv2 web ACL. AWS WAFv2 is a web application firewall that helps protect web applications and APIs from attacks by allowing configured rules to allow, block, or monitor (count) web requests based on customizable rules and conditions that are defined.",
+          "severity": "warning",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Api/DeploymentStage.prod/Resource",
+              "constructFqn": "aws-cdk-lib.aws_apigateway.CfnStage",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...new RestApi2 in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:202:17)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node..."
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-APIG3",
+          "reason": "API is only reachable through CloudFront + WAF; direct calls are rejected by the origin-verify check.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-APIG4",
+          "description": "The API does not implement authorization. In most cases an API needs to have an authentication and authorization implementation strategy. This includes using such approaches as IAM, Cognito User Pools, Custom authorizer, etc.",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Api/Default/api/health/GET/Resource",
+              "constructFqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...PropertyInjectable.addMethod in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:223:32)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node, ts-node..."
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-APIG4",
+          "reason": "/api/health is intentionally unauthenticated and returns no data; all other routes use the Cognito authorizer.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-COG4",
+          "description": "The API GW method does not use a Cognito user pool authorizer. API Gateway validates the tokens from a successful user pool authentication, and uses them to grant your users access to resources including Lambda functions, or your own API.",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Api/Default/api/health/GET/Resource",
+              "constructFqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...PropertyInjectable.addMethod in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:223:32)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node, ts-node..."
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-COG4",
+          "reason": "/api/health is intentionally unauthenticated and returns no data; all other routes use the Cognito authorizer.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-CFR1",
+          "description": "The CloudFront distribution may require Geo restrictions. Geo restriction may need to be enabled for the distribution in order to allow or deny a country in order to allow or restrict users in specific locations from accessing content.",
+          "severity": "warning",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Cdn/Resource",
+              "constructFqn": "aws-cdk-lib.aws_cloudfront.CfnDistribution",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...new Distribution2 in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:246:26)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node, ts-node..."
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-CFR1",
+          "reason": "No geo restriction: students may attend from any location.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::arn:<AWS::Partition>:s3:::cdk-sdlcins-assets-154833006816-us-west-2/*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::arn:<AWS::Partition>:s3:::cdk-sdlcins-assets-154833006816-us-west-2/*]",
+          "reason": "CDK-managed BucketDeployment helper scoped to the site bucket and the CDK asset bucket.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Action::s3:DeleteObject*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Action::s3:DeleteObject*]",
+          "reason": "CDK-managed BucketDeployment helper scoped to the site bucket and the CDK asset bucket.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Action::s3:Abort*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Action::s3:Abort*]",
+          "reason": "CDK-managed BucketDeployment helper scoped to the site bucket and the CDK asset bucket.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-IAM5[Resource::<SiteE53D7754.Arn>/*]",
+          "description": "The IAM entity contains wildcard permissions and does not have a cdk-nag rule suppression with evidence for those permission. Metadata explaining the evidence (e.g. via supporting links) for wildcard permissions allows for transparency to operators. This is a granular rule that returns individual findings that can be suppressed with 'appliesTo'. The findings are in the format 'Action::<action>' for policy actions and 'Resource::<resource>' for resources. Example: appliesTo: ['Action::s3:*'].",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/ServiceRole/DefaultPolicy/Resource",
+              "constructFqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...aws-cdk-lib...\n(no user code in 10 frames, use --stack-trace-limit to capture more)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-IAM5[Resource::<SiteE53D7754.Arn>/*]",
+          "reason": "CDK-managed BucketDeployment helper scoped to the site bucket and the CDK asset bucket.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        },
+        {
+          "ruleName": "AwsSolutions-L1",
+          "description": "The non-container Lambda function is not configured to use the latest runtime version. Use the latest available runtime for the targeted language to avoid technical debt. Runtimes specific to a language or framework version are deprecated when the version reaches end of life. This rule only applies to non-container Lambda functions.",
+          "severity": "error",
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Resource",
+              "constructFqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+              "libraryVersion": "2.275.0",
+              "stackTraces": [
+                "...new BucketDeployment2 in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:274:7)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)"
+              ]
+            }
+          ],
+          "acknowledgedId": "AwsSolutions::AwsSolutions-L1",
+          "reason": "Application functions use Node.js 24; the remaining finding is the CDK-managed BucketDeployment provider runtime.",
+          "acknowledgedAt": "SdlcInsightsApp",
+          "acknowledgedStackTrace": "    ...Validations.acknowledge in aws-cdk-lib...\n    at /home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29: (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:4)\n    at Array.forEach (:)\n    at applyNagSuppressions (/home/tommy/demo/sdlc-insights/lib/nag-suppressions.ts:29:8)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:30:21)\n    ...node internals, ts-node, ts-node..."
+        }
+      ]
+    },
+    {
+      "pluginName": "CloudFormation Validate",
+      "pluginVersion": "1.12.1",
+      "conclusion": "success",
+      "violations": [],
+      "suppressedViolations": [
+        {
+          "ruleName": "W3045",
+          "description": "AccessControl: AccessControl property is deprecated. Use bucket policies instead",
+          "suggestedFix": "Remove AccessControl and use an AWS::S3::BucketPolicy resource",
+          "severity": "warning",
+          "ruleMetadata": {
+            "category": "Deprecation"
+          },
+          "violatingConstructs": [
+            {
+              "constructPath": "SdlcInsightsApp/AccessLogs/Resource",
+              "constructFqn": "aws-cdk-lib.aws_s3.CfnBucket",
+              "libraryVersion": "2.275.0",
+              "cloudFormationResource": {
+                "templatePath": "SdlcInsightsApp.template.json",
+                "logicalId": "AccessLogs8B620ECA",
+                "propertyPaths": [
+                  "Properties.AccessControl"
+                ]
+              },
+              "stackTraces": [
+                "...new Bucket2 in aws-cdk-lib...\nnew InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:77:24)\n<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n...node internals, ts-node, ts-node..."
+              ]
+            }
+          ],
+          "acknowledgedId": "CloudFormation-Validate::W3045",
+          "reason": "accessControl is deprecated, but we are still using it for historical reasons.",
+          "acknowledgedAt": "SdlcInsightsApp/AccessLogs",
+          "acknowledgedStackTrace": "    ...new Bucket2 in aws-cdk-lib...\n    at new InsightsAppStack (/home/tommy/demo/sdlc-insights/lib/app-stack.ts:87:29)\n    at <anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:22:15)\n    ...node internals, ts-node..."
+        }
+      ]
+    }
+  ]
+}

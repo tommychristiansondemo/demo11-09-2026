@@ -1,0 +1,368 @@
+{
+ "Description": "Secure SDLC Advisor - ACM certificate and CloudFront WAF (us-east-1)",
+ "Resources": {
+  "Cert5C9FAEC1": {
+   "Type": "AWS::CertificateManager::Certificate",
+   "Properties": {
+    "DomainName": "demo.awsteach.com",
+    "DomainValidationOptions": [
+     {
+      "DomainName": "demo.awsteach.com",
+      "HostedZoneId": "Z02882605B7GUS0L3VHX"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "SdlcAdvisorEdge/Cert"
+     },
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "ValidationMethod": "DNS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorEdge/Cert/Resource"
+   }
+  },
+  "WebAcl": {
+   "Type": "AWS::WAFv2::WebACL",
+   "Properties": {
+    "DefaultAction": {
+     "Allow": {}
+    },
+    "Name": "sdlc-advisor-web-acl",
+    "Rules": [
+     {
+      "Action": {
+       "Block": {}
+      },
+      "Name": "RateLimitPerIp",
+      "Priority": 0,
+      "Statement": {
+       "RateBasedStatement": {
+        "AggregateKeyType": "IP",
+        "Limit": 3000
+       }
+      },
+      "VisibilityConfig": {
+       "CloudWatchMetricsEnabled": true,
+       "MetricName": "RateLimitPerIp",
+       "SampledRequestsEnabled": true
+      }
+     },
+     {
+      "Action": {
+       "Block": {}
+      },
+      "Name": "ApiBodySizeLimit",
+      "Priority": 1,
+      "Statement": {
+       "AndStatement": {
+        "Statements": [
+         {
+          "ByteMatchStatement": {
+           "FieldToMatch": {
+            "UriPath": {}
+           },
+           "PositionalConstraint": "STARTS_WITH",
+           "SearchString": "/api/",
+           "TextTransformations": [
+            {
+             "Priority": 0,
+             "Type": "NONE"
+            }
+           ]
+          }
+         },
+         {
+          "SizeConstraintStatement": {
+           "ComparisonOperator": "GT",
+           "FieldToMatch": {
+            "Body": {
+             "OversizeHandling": "MATCH"
+            }
+           },
+           "Size": 16000,
+           "TextTransformations": [
+            {
+             "Priority": 0,
+             "Type": "NONE"
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      "VisibilityConfig": {
+       "CloudWatchMetricsEnabled": true,
+       "MetricName": "ApiBodySizeLimit",
+       "SampledRequestsEnabled": true
+      }
+     },
+     {
+      "Name": "AWSManagedRulesAmazonIpReputationList",
+      "OverrideAction": {
+       "None": {}
+      },
+      "Priority": 2,
+      "Statement": {
+       "ManagedRuleGroupStatement": {
+        "Name": "AWSManagedRulesAmazonIpReputationList",
+        "RuleActionOverrides": [],
+        "VendorName": "AWS"
+       }
+      },
+      "VisibilityConfig": {
+       "CloudWatchMetricsEnabled": true,
+       "MetricName": "AWSManagedRulesAmazonIpReputationList",
+       "SampledRequestsEnabled": true
+      }
+     },
+     {
+      "Name": "AWSManagedRulesCommonRuleSet",
+      "OverrideAction": {
+       "None": {}
+      },
+      "Priority": 3,
+      "Statement": {
+       "ManagedRuleGroupStatement": {
+        "Name": "AWSManagedRulesCommonRuleSet",
+        "RuleActionOverrides": [
+         {
+          "ActionToUse": {
+           "Count": {}
+          },
+          "Name": "SizeRestrictions_BODY"
+         },
+         {
+          "ActionToUse": {
+           "Count": {}
+          },
+          "Name": "CrossSiteScripting_BODY"
+         }
+        ],
+        "VendorName": "AWS"
+       }
+      },
+      "VisibilityConfig": {
+       "CloudWatchMetricsEnabled": true,
+       "MetricName": "AWSManagedRulesCommonRuleSet",
+       "SampledRequestsEnabled": true
+      }
+     },
+     {
+      "Name": "AWSManagedRulesKnownBadInputsRuleSet",
+      "OverrideAction": {
+       "None": {}
+      },
+      "Priority": 4,
+      "Statement": {
+       "ManagedRuleGroupStatement": {
+        "Name": "AWSManagedRulesKnownBadInputsRuleSet",
+        "RuleActionOverrides": [],
+        "VendorName": "AWS"
+       }
+      },
+      "VisibilityConfig": {
+       "CloudWatchMetricsEnabled": true,
+       "MetricName": "AWSManagedRulesKnownBadInputsRuleSet",
+       "SampledRequestsEnabled": true
+      }
+     }
+    ],
+    "Scope": "CLOUDFRONT",
+    "Tags": [
+     {
+      "Key": "project",
+      "Value": "secure-sdlc-advisor"
+     }
+    ],
+    "VisibilityConfig": {
+     "CloudWatchMetricsEnabled": true,
+     "MetricName": "sdlc-advisor-web-acl",
+     "SampledRequestsEnabled": true
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorEdge/WebAcl"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02KywqDMBBFv8V9nKahxbVkWygotMsyxqSM1UTyMBTx34t00a7uOYcrQFRn4AXmUKr+VY7UwdpGVC/W6OCSV5phDo9VaR/JkMKoJ7T41B5W+WtMGvunG8toFgHS2LvuannZ9sM1xTnFjVnXaxjCYREnOFbAiyEQlT7ZSJOG5ruMAwdezG4k9b7hSD1GchbqHFo3pp3DB8UuN8W+AAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorEdge/CDKMetadata/Default"
+   }
+  },
+  "ExportsWriteruswest209BD44F0A7CF058B": {
+   "Type": "Custom::CrossRegionExportWriter",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomCrossRegionExportWriterCustomResourceProviderHandlerD8786E8A",
+      "Arn"
+     ]
+    },
+    "WriterProps": {
+     "region": "us-west-2",
+     "exports": {
+      "/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1RefCert5C9FAEC1FEAC1534": {
+       "Ref": "Cert5C9FAEC1"
+      },
+      "/cdk/exports/SdlcAdvisorApp/SdlcAdvisorEdgeuseast1FnGetAttWebAclArn88C45EAC": {
+       "Fn::GetAtt": [
+        "WebAcl",
+        "Arn"
+       ]
+      }
+     }
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorEdge/ExportsWriteruswest209BD44F0/Resource/Default"
+   }
+  },
+  "CustomCrossRegionExportWriterCustomResourceProviderRoleC951B1E1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:",
+             {
+              "Ref": "AWS::Partition"
+             },
+             ":ssm:us-west-2:154833006816:parameter/cdk/exports/*"
+            ]
+           ]
+          }
+         ],
+         "Action": [
+          "ssm:DeleteParameters",
+          "ssm:ListTagsForResource",
+          "ssm:GetParameters",
+          "ssm:PutParameter"
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorEdge/Custom::CrossRegionExportWriterCustomResourceProvider/Role"
+   }
+  },
+  "CustomCrossRegionExportWriterCustomResourceProviderHandlerD8786E8A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-sdlcadv-assets-154833006816-us-east-1",
+     "S3Key": "08b23c75a1fe108c9fbd7896f6d7a668289c804be7852d611aecf2a0b501279f.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomCrossRegionExportWriterCustomResourceProviderRoleC951B1E1",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs24.x"
+   },
+   "DependsOn": [
+    "CustomCrossRegionExportWriterCustomResourceProviderRoleC951B1E1"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SdlcAdvisorEdge/Custom::CrossRegionExportWriterCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.08b23c75a1fe108c9fbd7896f6d7a668289c804be7852d611aecf2a0b501279f",
+    "aws:asset:property": "Code"
+   }
+  }
+ },
+ "Outputs": {
+  "CertificateArn": {
+   "Value": {
+    "Ref": "Cert5C9FAEC1"
+   }
+  },
+  "WebAclArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "WebAcl",
+     "Arn"
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/sdlcadv/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,141 @@
+{
+  "version": "55.0.0",
+  "files": {
+    "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6": {
+      "displayName": "SdlcInsightsApp/Custom::S3AutoDeleteObjectsCustomResourceProvider Code",
+      "source": {
+        "path": "asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-west-2-8b27b6f2": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "15c008bcc23b6fb601c209dd006b1eff1e7a1d837729895fff6a557089ad2226": {
+      "displayName": "ChatFn/Code",
+      "source": {
+        "path": "asset.15c008bcc23b6fb601c209dd006b1eff1e7a1d837729895fff6a557089ad2226",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-west-2-3cc34739": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "15c008bcc23b6fb601c209dd006b1eff1e7a1d837729895fff6a557089ad2226.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "f9e5694031b0608ff4163ab7471887c080f2df10274f5be1f8e9ef561c222f23": {
+      "displayName": "ApiFn/Code",
+      "source": {
+        "path": "asset.f9e5694031b0608ff4163ab7471887c080f2df10274f5be1f8e9ef561c222f23",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-west-2-c80047a3": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "f9e5694031b0608ff4163ab7471887c080f2df10274f5be1f8e9ef561c222f23.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec": {
+      "displayName": "DeploySite/AwsCliLayer/Code",
+      "source": {
+        "path": "asset.98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip",
+        "packaging": "file"
+      },
+      "destinations": {
+        "154833006816-us-west-2-1ea42e3f": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "98f62bef9320f8c0a0a7be21d7c746f069131f196f51ffe3008a6bb730b368ec.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "35328da138f26fbd9160297abc9a2522d93dbf75878cd5114a9c050419fc1ce0": {
+      "displayName": "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C512MiB/Code",
+      "source": {
+        "path": "asset.35328da138f26fbd9160297abc9a2522d93dbf75878cd5114a9c050419fc1ce0",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-west-2-a46efa9b": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "35328da138f26fbd9160297abc9a2522d93dbf75878cd5114a9c050419fc1ce0.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "1c3fdb9c6982c416d56bb2375093d102e65340aaebd77bcf313dca00e75abab7": {
+      "displayName": "DeploySite/Asset1",
+      "source": {
+        "path": "asset.1c3fdb9c6982c416d56bb2375093d102e65340aaebd77bcf313dca00e75abab7",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-west-2-57aaaa2c": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "1c3fdb9c6982c416d56bb2375093d102e65340aaebd77bcf313dca00e75abab7.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "b351d81b7ce1f2bdba9fab76159195f682da15c350eb260c39465fab8116997a": {
+      "displayName": "DeploySite/Asset2",
+      "source": {
+        "path": "asset.b351d81b7ce1f2bdba9fab76159195f682da15c350eb260c39465fab8116997a",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-west-2-deef3570": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "b351d81b7ce1f2bdba9fab76159195f682da15c350eb260c39465fab8116997a.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "f8b7112ff78fd0b6fab4c6b048fc1da9945198135db9a1e6b1d5cb4599d5a3d2": {
+      "displayName": "SdlcInsightsApp/Custom::CrossRegionExportReaderCustomResourceProvider Code",
+      "source": {
+        "path": "asset.f8b7112ff78fd0b6fab4c6b048fc1da9945198135db9a1e6b1d5cb4599d5a3d2",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "154833006816-us-west-2-43a1de5b": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "f8b7112ff78fd0b6fab4c6b048fc1da9945198135db9a1e6b1d5cb4599d5a3d2.zip",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    },
+    "a4feff5f6e86562635eb517392118ce014430fb1143c2f49df4993a62e0c9f9d": {
+      "displayName": "SdlcInsightsApp Template",
+      "source": {
+        "path": "SdlcInsightsApp.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "154833006816-us-west-2-e24f5f36": {
+          "bucketName": "cdk-sdlcins-assets-154833006816-us-west-2",
+          "objectKey": "a4feff5f6e86562635eb517392118ce014430fb1143c2f49df4993a62e0c9f9d.json",
+          "region": "us-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::154833006816:role/cdk-sdlcins-file-publishing-role-154833006816-us-west-2"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

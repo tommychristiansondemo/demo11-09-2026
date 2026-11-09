@@ -1,0 +1,165 @@
+{
+  "/SdlcInsightsEdge": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:18:14)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:templateFile",
+      "data": "SdlcInsightsEdge.template.json"
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "project",
+          "value": "sdlc-class-insights"
+        }
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/WebAcl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WebAcl"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new EdgeStack (/home/tommy/demo/sdlc-insights/lib/edge-stack.ts:41:17)",
+        "<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:18:14)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/CertificateArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CertificateArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new EdgeStack (/home/tommy/demo/sdlc-insights/lib/edge-stack.ts:80:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:18:14)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/WebAclArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "WebAclArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new EdgeStack (/home/tommy/demo/sdlc-insights/lib/edge-stack.ts:81:5)",
+        "<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:18:14)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/Custom::CrossRegionExportWriterCustomResourceProvider": [
+    {
+      "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+      "data": true
+    }
+  ],
+  "/SdlcInsightsEdge/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/Cert/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Cert5C9FAEC1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Certificate2 in aws-cdk-lib...",
+        "new EdgeStack (/home/tommy/demo/sdlc-insights/lib/edge-stack.ts:22:24)",
+        "<anonymous> (/home/tommy/demo/sdlc-insights/bin/app.ts:18:14)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/Custom::CrossRegionExportWriterCustomResourceProvider/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCrossRegionExportWriterCustomResourceProviderRoleC951B1E1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/Custom::CrossRegionExportWriterCustomResourceProvider/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCrossRegionExportWriterCustomResourceProviderHandlerD8786E8A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SdlcInsightsEdge/ExportsWriteruswest209BD44F0/Resource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsWriteruswest209BD44F0A7CF058B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ]
+}
